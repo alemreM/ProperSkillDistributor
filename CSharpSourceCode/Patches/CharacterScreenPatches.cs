@@ -42,7 +42,6 @@ namespace ProperSkillDistributor
     {
         private static bool Prefix(CharacterDeveloperVM __instance, ref bool __state)
         {
-            // from now on postfix will use the version after its cleared
             __state = PresetEditorSession.IsActive;
 
             if (__state)
@@ -160,7 +159,7 @@ namespace ProperSkillDistributor
 
         private static MethodBase TargetMethod()
         {
-            // ScreenBase focus restoreunu kullanmadan visiblelasip hotkey (q, e, esc) ignoreluyor 
+            // ScreenBase become visible and usable without restoring focus. this will end up ignoring hotkeys are that only usable when focused (q, e, esc)
             Type screenType = AccessTools.TypeByName("SandBox.GauntletUI.GauntletCharacterDeveloperScreen");
             return AccessTools.Method(screenType, "OnFrameTick", new[] { typeof(float) });
         }

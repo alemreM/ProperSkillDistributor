@@ -36,7 +36,7 @@ namespace ProperSkillDistributor
 
             InformationManager.HideAllMessages();
 
-            // vanilla vmden once calismazsa kendi kendini actual rosterdan kuruyor
+            // if editor isnt active before new CharacterDeveloperVM it will be built from the actual hero roster
             PresetEditorSession.Begin(_behavior, _slotIndex, CloseScreen);
 
             _dataSource = new CharacterDeveloperVM(CloseScreen);
