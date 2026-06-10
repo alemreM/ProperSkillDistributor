@@ -6,7 +6,7 @@ namespace ProperSkillDistributor
     public class SkillPresetSaveTypes : SaveableTypeDefiner
     {
         public SkillPresetSaveTypes()
-            : base(928440000)
+            : base(2984400)
         {
         }
 
