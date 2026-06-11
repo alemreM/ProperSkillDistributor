@@ -136,6 +136,7 @@ namespace ProperSkillDistributor
             {
                 SkillObject picked = null;
                 int pickedWeight = 0;
+                int pickedAttributePriority = 0;
 
                 for (int pass = 0; pass < 2 && picked == null; pass++)
                 {
@@ -155,10 +156,13 @@ namespace ProperSkillDistributor
                             continue;
                         }
 
-                        if (target > pickedWeight)
+                        int attributePriority = GetSkillAttributePriority(skill, attributeLine);
+
+                        if (target > pickedWeight || target == pickedWeight && attributePriority > pickedAttributePriority)
                         {
                             picked = skill;
                             pickedWeight = target;
+                            pickedAttributePriority = attributePriority;
                         }
                     }
                 }
@@ -239,6 +243,23 @@ namespace ProperSkillDistributor
 
                 developer.AddPerk(perk);
             }
+        }
+        private static int GetSkillAttributePriority(SkillObject skill, List<KeyValuePair<CharacterAttribute, int>> attributeLine)
+        {
+            int priority = 0;
+
+            foreach (CharacterAttribute skillAttribute in skill.Attributes)
+            {
+                for (int i = 0; i < attributeLine.Count; i++)
+                {
+                    if (attributeLine[i].Key == skillAttribute && attributeLine[i].Value > priority)
+                    {
+                        priority = attributeLine[i].Value;
+                    }
+                }
+            }
+
+            return priority;
         }
     }
 }
