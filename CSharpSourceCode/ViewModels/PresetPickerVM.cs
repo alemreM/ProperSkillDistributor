@@ -2,6 +2,8 @@ using Bannerlord.UIExtenderEx.Attributes;
 using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
@@ -185,10 +187,59 @@ namespace ProperSkillDistributor
                     null));
         }
 
+        public void TemplatePreset(PresetPickerRowVM row)
+        {
+            if (row == null || row.SlotIndex == 0)
+            {
+                return;
+            }
+
+            List<TemplatePreset> templates = PredefinedTemplateCatalog.GetTemplates();
+
+            if (templates.Count == 0)
+            {
+                string message = string.IsNullOrEmpty(PredefinedTemplateCatalog.LoadError)
+                    ? "No skill preset templates were found."
+                    : PredefinedTemplateCatalog.LoadError;
+
+                InformationManager.DisplayMessage(new InformationMessage(message));
+                return;
+            }
+
+            List<InquiryElement> elements = new List<InquiryElement>();
+
+            foreach (TemplatePreset template in templates)
+            {
+                string hint = string.IsNullOrEmpty(template.Description)
+                    ? "Copy this template into " + row.NameText + "."
+                    : template.Description;
+
+                elements.Add(new InquiryElement(
+                    template,
+                    template.Name,
+                    null,
+                    true,
+                    hint));
+            }
+
+            MBInformationManager.ShowMultiSelectionInquiry(
+                new MultiSelectionInquiryData(
+                    "Templates",
+                    "Select a built-in template to copy into " + row.NameText + ".",
+                    elements,
+                    true,
+                    1,
+                    1,
+                    "Copy",
+                    "Cancel",
+                    pickedTemplates => UseTemplate(row, pickedTemplates),
+                    null));
+        }
+
         private void FillPresetSlots()
         {
             TitleText = "Add Presets";
-            DescriptionText = "Pick a preset slot to edit. Slots can be renamed, cleared and mimiced dynamically copying another character.";
+            DescriptionText = "Pick a preset slot to edit. Slots can be renamed, cleared, mimiced, or filled from templates.";
 
             foreach (SkillPreset preset in _presets.GetPresets())
             {
@@ -250,6 +301,91 @@ namespace ProperSkillDistributor
             }
 
             SelectRow(row);
+        }
+
+        private void UseTemplate(PresetPickerRowVM row, List<InquiryElement> pickedTemplates)
+        {
+            if (pickedTemplates == null || pickedTemplates.Count == 0)
+            {
+                return;
+            }
+
+            TemplatePreset template = pickedTemplates[0].Identifier as TemplatePreset;
+
+            if (template == null)
+            {
+                return;
+            }
+
+            _presets.ConfigurePreset(
+                row.SlotIndex,
+                template.Name,
+                GetAvailableAttributeTargets(template),
+                GetAvailableSkillFocusTargets(template),
+                GetAvailablePerkIds(template));
+
+            SkillPreset preset = _presets.GetPreset(row.SlotIndex);
+
+            if (preset != null)
+            {
+                row.RefreshFromPreset(preset);
+            }
+
+            SelectRow(row);
+        }
+        private static Dictionary<string, int> GetAvailableAttributeTargets(TemplatePreset template)
+        {
+            Dictionary<string, int> availableTargets = new Dictionary<string, int>();
+
+            foreach (CharacterAttribute attribute in Attributes.All)
+            {
+                int target;
+
+                if (template.AttributeTargets.TryGetValue(attribute.StringId, out target) && target > 0)
+                {
+                    availableTargets[attribute.StringId] = target;
+                }
+            }
+
+            return availableTargets;
+        }
+
+        private static Dictionary<string, int> GetAvailableSkillFocusTargets(TemplatePreset template)
+        {
+            Dictionary<string, int> availableTargets = new Dictionary<string, int>();
+
+            foreach (SkillObject skill in Skills.All)
+            {
+                int target;
+
+                if (template.SkillFocusTargets.TryGetValue(skill.StringId, out target) && target > 0)
+                {
+                    availableTargets[skill.StringId] = target;
+                }
+            }
+
+            return availableTargets;
+        }
+
+        private static List<string> GetAvailablePerkIds(TemplatePreset template)
+        {
+            List<string> availablePerkIds = new List<string>();
+            HashSet<string> addedPerkIds = new HashSet<string>();
+
+            foreach (PerkObject perk in PerkObject.All)
+            {
+                if (perk.Skill == null || string.IsNullOrEmpty(perk.StringId))
+                {
+                    continue;
+                }
+
+                if (template.SelectedPerkIds.Contains(perk.StringId) && addedPerkIds.Add(perk.StringId))
+                {
+                    availablePerkIds.Add(perk.StringId);
+                }
+            }
+
+            return availablePerkIds;
         }
 
         private static Tuple<bool, string> CheckPresetName(string name)
