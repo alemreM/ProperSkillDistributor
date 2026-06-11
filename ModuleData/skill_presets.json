@@ -71,13 +71,7 @@
         "intelligence": 10
       },
       "focus": {
-        "EngineeringMedicine": 5
-      },
-      "perks": [
-        "MedicineBestMedicine",
-        "MedicineCheatDeath",
-        "MedicineDoctorsOath",
-        "MedicineHelping": 5
+        "Engineering": 5
       },
       "perks": [
         "EngineeringArchitecturalCommissions",
