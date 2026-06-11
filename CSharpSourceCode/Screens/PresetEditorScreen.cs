@@ -19,6 +19,7 @@ namespace ProperSkillDistributor
 
         private CharacterDeveloperVM _dataSource;
         private GauntletLayer _gauntletLayer;
+        private readonly CharacterDeveloperSpriteScope _spriteScope = new CharacterDeveloperSpriteScope();
 
         public PresetEditorScreen(
             SkillPresetBehavior behavior,
@@ -35,6 +36,8 @@ namespace ProperSkillDistributor
             base.OnInitialize();
 
             InformationManager.HideAllMessages();
+
+            _spriteScope.Load();
 
             // if editor isnt active before new CharacterDeveloperVM it will be built from the actual hero roster
             PresetEditorSession.Begin(_behavior, _slotIndex, CloseScreen);
@@ -110,6 +113,8 @@ namespace ProperSkillDistributor
 
             _dataSource.OnFinalize();
             _dataSource = null;
+
+            _spriteScope.Unload();
         }
 
         private void ExecuteSwitchToPreviousTab()
