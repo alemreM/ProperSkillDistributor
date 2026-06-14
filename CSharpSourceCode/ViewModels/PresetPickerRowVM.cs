@@ -15,6 +15,7 @@ namespace ProperSkillDistributor
         private bool _canClear;
         private bool _canMimic;
         private bool _canTemplates;
+        private bool _canExport;
 
         public int SlotIndex { get; private set; }
 
@@ -131,6 +132,20 @@ namespace ProperSkillDistributor
             }
         }
 
+        [DataSourceProperty]
+        public bool CanExport
+        {
+            get { return _canExport; }
+            set
+            {
+                if (value != _canExport)
+                {
+                    _canExport = value;
+                    OnPropertyChangedWithValue(value, "CanExport");
+                }
+            }
+        }
+
         public PresetPickerRowVM(PresetPickerVM selector)
         {
             _selector = selector;
@@ -141,6 +156,7 @@ namespace ProperSkillDistributor
             CanClear = false;
             CanMimic = false;
             CanTemplates = false;
+            CanExport = false;
             SelectionText = string.Empty;
         }
 
@@ -155,6 +171,7 @@ namespace ProperSkillDistributor
             CanClear = canRename;
             CanMimic = canRename;
             CanTemplates = canRename;
+            CanExport = canRename;
             SelectionText = string.Empty;
 
             RefreshFromPreset(preset);
@@ -188,6 +205,12 @@ namespace ProperSkillDistributor
         public void ExecuteTemplates()
         {
             _selector.TemplatePreset(this);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteExport()
+        {
+            _selector.ExportPreset(this);
         }
 
         public void RefreshFromPreset(SkillPreset preset)

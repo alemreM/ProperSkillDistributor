@@ -188,6 +188,11 @@ namespace ProperSkillDistributor
                 presetFiles.Add("skill_presets_tor.json");
             }
 
+            if (File.Exists(Path.Combine(moduleDataPath, "your_presets.json")))
+            {
+                presetFiles.Add("your_presets.json");
+            }
+
             var rows = new List<ShippedPresetRow>();
             var readProblems = new List<string>();
             var serializer = new JavaScriptSerializer();

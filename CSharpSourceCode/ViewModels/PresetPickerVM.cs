@@ -348,6 +348,64 @@ namespace ProperSkillDistributor
                     null));
         }
 
+
+        public void ExportPreset(PresetPickerRowVM row)
+        {
+            if (row == null || row.SlotIndex == 0)
+            {
+                return;
+            }
+
+            SkillPreset preset = _presets.GetPreset(row.SlotIndex);
+
+            if (preset == null || !preset.IsConfigured)
+            {
+                ShowExportResult(false, "Only configured presets can be exported.");
+                return;
+            }
+
+            InformationManager.ShowTextInquiry(
+                new TextInquiryData(
+                    "Export Preset",
+                    "Name this exported template",
+                    true,
+                    true,
+                    "Export",
+                    "Cancel",
+                    exportName => ExportSlotWithName(row, exportName),
+                    null,
+                    false,
+                    CheckPresetName,
+                    string.Empty,
+                    preset.Name),
+                false,
+                false);
+        }
+        private void ExportSlotWithName(PresetPickerRowVM row, string exportName)
+        {
+            SkillPreset preset = _presets.GetPreset(row.SlotIndex);
+            string message;
+            bool success = TemplateExporter.TryExportPreset(preset, exportName, out message);
+
+            ShowExportResult(success, message);
+        }
+
+        private static void ShowExportResult(bool success, string message)
+        {
+            InformationManager.ShowInquiry(
+                new InquiryData(
+                    success ? "Export successful" : "Export failed",
+                    message,
+                    true,
+                    false,
+                    "OK",
+                    string.Empty,
+                    null,
+                    null),
+                false,
+                false);
+        }
+
         private string GetFocusFloorHint()
         {
 			return "Focus floor. Assigned skills are filled to this value before the preset starts targeting other skills with higher values (if their target value is over the floor value). Use - / + to change it.";
