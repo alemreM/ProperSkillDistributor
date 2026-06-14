@@ -10,9 +10,9 @@
 
             <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="28" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="34" Text="@TitleText" />
 
-            <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="82" MarginLeft="48" MarginRight="48" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="20" Brush.TextHorizontalAlignment="Center" Text="@DescriptionText" />
+            <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="82" MarginLeft="48" MarginRight="48" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Brush.TextHorizontalAlignment="Center" Text="@DescriptionText" />
 
-            <ScrollablePanel Id="PresetScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="470" MarginTop="140" MarginLeft="44" MarginRight="44" AutoHideScrollBars="true" ClipRect="PresetClip" InnerPanel="PresetClip\PresetList" VerticalScrollbar="..\PresetScrollbar">
+            <ScrollablePanel Id="PresetScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="470" MarginTop="126" MarginLeft="44" MarginRight="44" AutoHideScrollBars="true" ClipRect="PresetClip" InnerPanel="PresetClip\PresetList" VerticalScrollbar="..\PresetScrollbar">
               <Children>
 
                 <Widget Id="PresetClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
@@ -78,7 +78,7 @@
               </Children>
             </ScrollablePanel>
 
-            <ScrollbarWidget Id="PresetScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="6" SuggestedHeight="470" HorizontalAlignment="Right" MarginTop="140" MarginRight="32" AlignmentAxis="Vertical" Handle="PresetScrollbarHandle" MaxValue="100" MinValue="0">
+            <ScrollbarWidget Id="PresetScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="6" SuggestedHeight="470" HorizontalAlignment="Right" MarginTop="126" MarginRight="32" AlignmentAxis="Vertical" Handle="PresetScrollbarHandle" MaxValue="100" MinValue="0">
               <Children>
                 <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#5a4033FF" AlphaFactor="0.2" />
                 <ImageWidget Id="PresetScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="10" SuggestedWidth="6" HorizontalAlignment="Center" Brush="FaceGen.Scrollbar.Handle" />
@@ -112,6 +112,59 @@
           </Children>
         </BrushWidget>
 
+               <Widget Id="PresetTopControlsAnchor" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="900" SuggestedHeight="40" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="127">
+          <Children>
+            <ListPanel Id="PresetFloorControls" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <Children>
+
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="18" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                  <Children>
+                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="38" SuggestedHeight="36" VerticalAlignment="Center" Brush="Character.Selection.Button" Command.Click="ExecuteDecreaseFocusFloor" UpdateChildrenStates="true">
+                      <Children>
+                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="23" Text="-" />
+                      </Children>
+                    </ButtonWidget>
+
+                    <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="132" SuggestedHeight="36" VerticalAlignment="Center" MarginLeft="5" MarginRight="5" Brush="Character.Selection.Button" Command.HoverBegin="ExecuteShowFocusFloorHint" Command.HoverEnd="ExecuteHideFloorHint">
+                      <Children>
+                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Text="@FocusFloorText" />
+                      </Children>
+                    </BrushWidget>
+
+                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="38" SuggestedHeight="36" VerticalAlignment="Center" Brush="Character.Selection.Button" Command.Click="ExecuteIncreaseFocusFloor" UpdateChildrenStates="true">
+                      <Children>
+                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="23" Text="+" />
+                      </Children>
+                    </ButtonWidget>
+                  </Children>
+                </ListPanel>
+
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                  <Children>
+                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="38" SuggestedHeight="36" VerticalAlignment="Center" Brush="Character.Selection.Button" Command.Click="ExecuteDecreaseAttributeFloor" UpdateChildrenStates="true">
+                      <Children>
+                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="23" Text="-" />
+                      </Children>
+                    </ButtonWidget>
+
+                    <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="132" SuggestedHeight="36" VerticalAlignment="Center" MarginLeft="5" MarginRight="5" Brush="Character.Selection.Button" Command.HoverBegin="ExecuteShowAttributeFloorHint" Command.HoverEnd="ExecuteHideFloorHint">
+                      <Children>
+                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Text="@AttributeFloorText" />
+                      </Children>
+                    </BrushWidget>
+
+                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="38" SuggestedHeight="36" VerticalAlignment="Center" Brush="Character.Selection.Button" Command.Click="ExecuteIncreaseAttributeFloor" UpdateChildrenStates="true">
+                      <Children>
+                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="23" Text="+" />
+                      </Children>
+                    </ButtonWidget>
+                  </Children>
+                </ListPanel>
+
+              </Children>
+            </ListPanel>
+          </Children>
+        </Widget>
       </Children>
     </Widget>
   </Window>

@@ -13,6 +13,15 @@ namespace ProperSkillDistributor
         [SaveableField(2)]
         private Dictionary<string, int> _heroPresetAssignments;
 
+        [SaveableField(3)]
+        private int _focusFloorLimit; // floor is the minimum target value for every skill with points assigned (over floor value) before going for the maximum target points for any skill. probably not the best name for it
+
+        [SaveableField(4)]
+        private int _attributeFloorLimit;
+
+        [SaveableField(5)]
+        private bool _floorLimitsInitialized;
+
         public override void RegisterEvents()
         {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -24,6 +33,9 @@ namespace ProperSkillDistributor
         {
             dataStore.SyncData("_skillPresets", ref _presets);
             dataStore.SyncData("_skillPresetAssignments", ref _heroPresetAssignments);
+            dataStore.SyncData("_focusFloorLimit", ref _focusFloorLimit);
+            dataStore.SyncData("_attributeFloorLimit", ref _attributeFloorLimit);
+            dataStore.SyncData("_floorLimitsInitialized", ref _floorLimitsInitialized);
 
             RepairPresetSlotsAfterLoad();
         }
@@ -38,6 +50,36 @@ namespace ProperSkillDistributor
         {
             RepairPresetSlotsAfterLoad();
             return FindPresetInCurrentSlots(slotIndex);
+        }
+
+        public int FocusFloorLimit
+        {
+            get { return _focusFloorLimit; }
+        }
+
+        public int AttributeFloorLimit
+        {
+            get { return _attributeFloorLimit; }
+        }
+
+        public void IncreaseFocusFloorLimit()
+        {
+            if (_focusFloorLimit < 5) _focusFloorLimit++;
+        }
+
+        public void DecreaseFocusFloorLimit()
+        {
+            if (_focusFloorLimit > 0) _focusFloorLimit--;
+        }
+
+        public void IncreaseAttributeFloorLimit()
+        {
+            if (_attributeFloorLimit < 10) _attributeFloorLimit++;
+        }
+
+        public void DecreaseAttributeFloorLimit()
+        {
+            if (_attributeFloorLimit > 0) _attributeFloorLimit--;
         }
 
         public int GetAssignedPresetSlot(Hero hero)
@@ -330,24 +372,27 @@ namespace ProperSkillDistributor
 
         private void RepairPresetSlotsAfterLoad()
         {
-            if (_presets == null)
-            {
-                _presets = new List<SkillPreset>();
-            }
+            _presets = _presets ?? new List<SkillPreset>();
+            _heroPresetAssignments = _heroPresetAssignments ?? new Dictionary<string, int>();
 
-            if (_heroPresetAssignments == null)
+            if (!_floorLimitsInitialized)
             {
-                _heroPresetAssignments = new Dictionary<string, int>();
+                _focusFloorLimit = 5;
+                _attributeFloorLimit = 10;
+                _floorLimitsInitialized = true;
             }
+            _focusFloorLimit = System.Math.Max(0, System.Math.Min(5, _focusFloorLimit));
+            _attributeFloorLimit = System.Math.Max(0, System.Math.Min(10, _attributeFloorLimit));
 
             _presets.RemoveAll(preset => preset == null);
 
             for (int slotIndex = 1; slotIndex <= 9; slotIndex++)
             {
-                if (FindPresetInCurrentSlots(slotIndex) == null)
+                if (FindPresetInCurrentSlots(slotIndex) != null)
                 {
-                    _presets.Add(new SkillPreset(slotIndex));
+                    continue;
                 }
+                _presets.Add(new SkillPreset(slotIndex));
             }
 
             _presets.Sort(delegate (SkillPreset left, SkillPreset right)

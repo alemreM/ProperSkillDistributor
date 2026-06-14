@@ -19,6 +19,7 @@ namespace ProperSkillDistributor
 
             preset.RebuildAfterLoad();
 
+            SkillPresetBehavior behavior = SkillPresetBehavior.Current;
             HeroDeveloper developer = hero.HeroDeveloper;
             Hero mimicHero = null;
 
@@ -29,7 +30,7 @@ namespace ProperSkillDistributor
             if (preset.IsMimicPreset)
             {
                 // mimic source is live and interactive. hero skill gain is read each time target is applied
-                mimicHero = SkillPresetBehavior.Current?.GetMimicSourceHero(preset);
+                mimicHero = behavior?.GetMimicSourceHero(preset);
 
                 if (mimicHero == null)
                 {
@@ -85,19 +86,16 @@ namespace ProperSkillDistributor
             }
 
             int maxAttribute = Campaign.Current.Models.CharacterDevelopmentModel.MaxAttribute;
+            int attributeFloorLimit = behavior != null ? behavior.AttributeFloorLimit : maxAttribute;
 
             while (developer.UnspentAttributePoints > 0)
             {
                 CharacterAttribute picked = null;
-                int pickedWeight = 0;
+                int pickedFloorTarget = 0;
+                int pickedTarget = 0;
 
-                for (int pass = 0; pass < 2 && picked == null; pass++)
+                for (int pass = 0; pass < 3 && picked == null; pass++)
                 {
-                    if (pass == 1)
-                    {
-                        // after all minimum targets are reached continue with the target with most points assigned
-                    }
-
                     for (int i = 0; i < attributeLine.Count; i++)
                     {
                         CharacterAttribute attribute = attributeLine[i].Key;
@@ -109,15 +107,39 @@ namespace ProperSkillDistributor
                             continue;
                         }
 
-                        if (pass == 0 && current >= target)
+                        if (pass == 0)
                         {
-                            continue;
-                        }
+                            int floorTarget = GetFloorTarget(target, attributeFloorLimit);
 
-                        if (target > pickedWeight)
+                            if (floorTarget <= 0 || current >= floorTarget)
+                            {
+                                continue;
+                            }
+
+                            if (floorTarget > pickedFloorTarget || floorTarget == pickedFloorTarget && target > pickedTarget)
+                            {
+                                picked = attribute;
+                                pickedFloorTarget = floorTarget;
+                                pickedTarget = target;
+                            }
+                        }
+                        else if (pass == 1)
+                        {
+                            if (current >= target)
+                            {
+                                continue;
+                            }
+
+                            if (target > pickedTarget)
+                            {
+                                picked = attribute;
+                                pickedTarget = target;
+                            }
+                        }
+                        else if (target > pickedTarget)
                         {
                             picked = attribute;
-                            pickedWeight = target;
+                            pickedTarget = target;
                         }
                     }
                 }
@@ -131,14 +153,16 @@ namespace ProperSkillDistributor
             }
 
             int maxFocus = Campaign.Current.Models.CharacterDevelopmentModel.MaxFocusPerSkill;
+            int focusFloorLimit = behavior != null ? behavior.FocusFloorLimit : maxFocus;
 
             while (developer.UnspentFocusPoints > 0)
             {
                 SkillObject picked = null;
-                int pickedWeight = 0;
+                int pickedFloorTarget = 0;
+                int pickedTarget = 0;
                 int pickedAttributePriority = 0;
 
-                for (int pass = 0; pass < 2 && picked == null; pass++)
+                for (int pass = 0; pass < 3 && picked == null; pass++)
                 {
                     for (int i = 0; i < focusLine.Count; i++)
                     {
@@ -151,17 +175,45 @@ namespace ProperSkillDistributor
                             continue;
                         }
 
-                        if (pass == 0 && current >= target)
-                        {
-                            continue;
-                        }
-
                         int attributePriority = GetSkillAttributePriority(skill, attributeLine);
 
-                        if (target > pickedWeight || target == pickedWeight && attributePriority > pickedAttributePriority)
+                        if (pass == 0)
+                        {
+                            int floorTarget = GetFloorTarget(target, focusFloorLimit);
+
+                            if (floorTarget <= 0 || current >= floorTarget)
+                            {
+                                continue;
+                            }
+
+                            if (floorTarget > pickedFloorTarget
+                                || floorTarget == pickedFloorTarget && target > pickedTarget
+                                || floorTarget == pickedFloorTarget && target == pickedTarget && attributePriority > pickedAttributePriority)
+                            {
+                                picked = skill;
+                                pickedFloorTarget = floorTarget;
+                                pickedTarget = target;
+                                pickedAttributePriority = attributePriority;
+                            }
+                        }
+                        else if (pass == 1)
+                        {
+                            if (current >= target)
+                            {
+                                continue;
+                            }
+
+                            if (target > pickedTarget || target == pickedTarget && attributePriority > pickedAttributePriority)
+                            {
+                                picked = skill;
+                                pickedTarget = target;
+                                pickedAttributePriority = attributePriority;
+                            }
+                        }
+                        else if (target > pickedTarget || target == pickedTarget && attributePriority > pickedAttributePriority)
                         {
                             picked = skill;
-                            pickedWeight = target;
+                            pickedTarget = target;
                             pickedAttributePriority = attributePriority;
                         }
                     }
@@ -244,6 +296,12 @@ namespace ProperSkillDistributor
                 developer.AddPerk(perk);
             }
         }
+
+        private static int GetFloorTarget(int target, int limit)
+        {
+            return limit <= 0 || target <= limit ? target : limit;
+        }
+
         private static int GetSkillAttributePriority(SkillObject skill, List<KeyValuePair<CharacterAttribute, int>> attributeLine)
         {
             int priority = 0;

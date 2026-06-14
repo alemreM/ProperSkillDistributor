@@ -18,6 +18,8 @@ namespace ProperSkillDistributor
         private PresetPickerRowVM _selectedRow;
         private string _titleText;
         private string _descriptionText;
+        private string _focusFloorText;
+        private string _attributeFloorText;
 
         [DataSourceProperty]
         public MBBindingList<PresetPickerRowVM> PresetRows { get; private set; }
@@ -50,6 +52,34 @@ namespace ProperSkillDistributor
             get { return true; }
         }
 
+        [DataSourceProperty]
+        public string FocusFloorText
+        {
+            get { return _focusFloorText; }
+            set
+            {
+                if (value != _focusFloorText)
+                {
+                    _focusFloorText = value;
+                    OnPropertyChangedWithValue(value, "FocusFloorText");
+                }
+            }
+        }
+
+        [DataSourceProperty]
+        public string AttributeFloorText
+        {
+            get { return _attributeFloorText; }
+            set
+            {
+                if (value != _attributeFloorText)
+                {
+                    _attributeFloorText = value;
+                    OnPropertyChangedWithValue(value, "AttributeFloorText");
+                }
+            }
+        }
+
         public PresetPickerVM(
             SkillPresetBehavior presets,
             Action leaveAddPresets,
@@ -61,6 +91,7 @@ namespace ProperSkillDistributor
 
             PresetRows = new MBBindingList<PresetPickerRowVM>();
 
+            RefreshFloorText();
             FillPresetSlots();
         }
 
@@ -85,6 +116,52 @@ namespace ProperSkillDistributor
             }
 
             _openEditorForSlot(_selectedRow.SlotIndex);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteDecreaseFocusFloor()
+        {
+            _presets.DecreaseFocusFloorLimit();
+            RefreshFloorText();
+        }
+
+        [DataSourceMethod]
+        public void ExecuteIncreaseFocusFloor()
+        {
+            _presets.IncreaseFocusFloorLimit();
+            RefreshFloorText();
+        }
+
+        [DataSourceMethod]
+        public void ExecuteDecreaseAttributeFloor()
+        {
+            _presets.DecreaseAttributeFloorLimit();
+            RefreshFloorText();
+        }
+
+        [DataSourceMethod]
+        public void ExecuteIncreaseAttributeFloor()
+        {
+            _presets.IncreaseAttributeFloorLimit();
+            RefreshFloorText();
+        }
+
+        [DataSourceMethod]
+        public void ExecuteShowFocusFloorHint()
+        {
+            MBInformationManager.ShowHint(GetFocusFloorHint());
+        }
+
+        [DataSourceMethod]
+        public void ExecuteShowAttributeFloorHint()
+        {
+            MBInformationManager.ShowHint(GetAttributeFloorHint());
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHideFloorHint()
+        {
+            MBInformationManager.HideInformations();
         }
 
         public void SelectRow(PresetPickerRowVM row)
@@ -234,6 +311,22 @@ namespace ProperSkillDistributor
                     "Cancel",
                     pickedTemplates => UseTemplate(row, pickedTemplates),
                     null));
+        }
+
+        private string GetFocusFloorHint()
+        {
+			return "Focus floor. Assigned skills are filled to this value before the preset starts targeting other skills with higher values (if their target value is over the floor value). Use - / + to change it.";
+		}
+
+        private string GetAttributeFloorHint()
+        {
+            return "Attribute floor. Assigned attributes are filled to this value before the preset starts targeting other skills with higher values (if their target value is over the floor value). Use - / + to change it.";
+        }
+
+        private void RefreshFloorText()
+        {
+            FocusFloorText = "Focus " + _presets.FocusFloorLimit;
+            AttributeFloorText = "Attr " + _presets.AttributeFloorLimit;
         }
 
         private void FillPresetSlots()
