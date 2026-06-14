@@ -39,31 +39,12 @@ namespace ProperSkillDistributor
                 "..",
                 ".."));
 
-            var presetJson = Path.Combine(moduleRoot, "ModuleData", "skill_presets.json");
+            var moduleDataPath = Path.Combine(moduleRoot, "ModuleData");
+            var shippedRows = ReadPresetRows(moduleDataPath);
+            var loadingProblem = _templatesProblem;
 
-            if (!File.Exists(presetJson))
+            if (shippedRows.Count == 0)
             {
-                _templatesProblem = "ModuleData/skill_presets.json is missing.";
-                return new List<TemplatePreset>();
-            }
-
-            ShippedPresetSheet sheet;
-
-            try
-            {
-                var serializer = new JavaScriptSerializer();
-                serializer.MaxJsonLength = 4 * 1024 * 1024;
-                sheet = serializer.Deserialize<ShippedPresetSheet>(File.ReadAllText(presetJson));
-            }
-            catch (Exception exception)
-            {
-                _templatesProblem = "Cant read predefined preset templates. Check skill_presets.json. " + exception.Message;
-                return new List<TemplatePreset>();
-            }
-
-            if (sheet == null || sheet.presets == null || sheet.presets.Count == 0)
-            {
-                _templatesProblem = "skill_presets.json exists but has no preset rows.";
                 return new List<TemplatePreset>();
             }
 
@@ -93,7 +74,7 @@ namespace ProperSkillDistributor
             var missingFromThisInstall = new HashSet<string>();
             var skippedRows = 0;
 
-            foreach (var shippedBuild in sheet.presets)
+            foreach (var shippedBuild in shippedRows)
             {
                 if (shippedBuild == null || string.IsNullOrEmpty(shippedBuild.id) || string.IsNullOrEmpty(shippedBuild.name))
                 {
@@ -172,20 +153,98 @@ namespace ProperSkillDistributor
                     perks));
             }
 
+            var problemNotes = new List<string>();
+
+            if (!string.IsNullOrEmpty(loadingProblem))
+            {
+                problemNotes.Add(loadingProblem);
+            }
+
             if (builds.Count == 0)
             {
-                _templatesProblem = "No shipped template matches. Validate your game files";
+                problemNotes.Add("No shipped template matches. Validate your game files");
             }
             else if (missingFromThisInstall.Count > 0 || skippedRows > 0)
             {
-                _templatesProblem = "Templates loaded with cuts. Missing optional ids: "
+                problemNotes.Add("Templates loaded with cuts. Missing optional ids: "
                     + missingFromThisInstall.Count
                     + ", skipped rows: "
                     + skippedRows
-                    + ".";
+                    + ".");
             }
 
+            _templatesProblem = problemNotes.Count > 0 ? string.Join(" ", problemNotes.ToArray()) : null;
+
             return builds;
+        }
+
+        private static List<ShippedPresetRow> ReadPresetRows(string moduleDataPath)
+        {
+            var presetFiles = new List<string>();
+            presetFiles.Add("skill_presets.json");
+
+            if (TorCompatibility.IsLoaded)
+            {
+                presetFiles.Add("skill_presets_tor.json");
+            }
+
+            var rows = new List<ShippedPresetRow>();
+            var readProblems = new List<string>();
+            var serializer = new JavaScriptSerializer();
+            serializer.MaxJsonLength = 8 * 1024 * 1024;
+
+            foreach (var presetFile in presetFiles)
+            {
+                var presetJson = Path.Combine(moduleDataPath, presetFile);
+
+                if (!File.Exists(presetJson))
+                {
+                    if (presetFile == "skill_presets.json")
+                    {
+                        _templatesProblem = "ModuleData/skill_presets.json is missing.";
+                        return new List<ShippedPresetRow>();
+                    }
+
+                    readProblems.Add("ModuleData/" + presetFile + " is missing.");
+                    continue;
+                }
+
+                ShippedPresetSheet sheet;
+
+                try
+                {
+                    sheet = serializer.Deserialize<ShippedPresetSheet>(File.ReadAllText(presetJson));
+                }
+                catch (Exception exception)
+                {
+                    if (presetFile == "skill_presets.json")
+                    {
+                        _templatesProblem = "Cant read predefined preset templates. Check skill_presets.json. " + exception.Message;
+                        return new List<ShippedPresetRow>();
+                    }
+
+                    readProblems.Add("Cant read optional preset templates. Check " + presetFile + ". " + exception.Message);
+                    continue;
+                }
+
+                if (sheet == null || sheet.presets == null || sheet.presets.Count == 0)
+                {
+                    if (presetFile == "skill_presets.json")
+                    {
+                        _templatesProblem = "skill_presets.json exists but has no preset rows.";
+                        return new List<ShippedPresetRow>();
+                    }
+
+                    readProblems.Add(presetFile + " exists but has no preset rows.");
+                    continue;
+                }
+
+                rows.AddRange(sheet.presets);
+            }
+
+            _templatesProblem = readProblems.Count > 0 ? string.Join(" ", readProblems.ToArray()) : null;
+
+            return rows;
         }
 
         private sealed class ShippedPresetSheet

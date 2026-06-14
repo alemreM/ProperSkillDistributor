@@ -241,15 +241,40 @@ namespace ProperSkillDistributor
             TitleText = "Add Presets";
             DescriptionText = "Pick a preset slot to edit. Slots can be renamed, cleared, mimiced, or filled from templates.";
 
-            foreach (SkillPreset preset in _presets.GetPresets())
-            {
-                PresetPickerRowVM row = new PresetPickerRowVM(this, preset, true);
-                PresetRows.Add(row);
+            List<SkillPreset> presets = _presets.GetPresets();
+            PresetPickerRowVM firstPresetRow = null;
 
-                if (_selectedRow == null)
+            if (MBSaveLoad.CurrentVersion.IsOlderThan(ApplicationVersion.FromString("v1.4.0", 0)))
+            {
+                foreach (SkillPreset preset in presets)
                 {
-                    SelectRow(row);
+                    PresetPickerRowVM row = new PresetPickerRowVM(this, preset, true);
+                    PresetRows.Add(row);
+
+                    if (preset.SlotIndex == 1)
+                    {
+                        firstPresetRow = row;
+                    }
                 }
+            }
+            else
+            {
+                for (int i = presets.Count - 1; i >= 0; i--)
+                {
+                    SkillPreset preset = presets[i];
+                    PresetPickerRowVM row = new PresetPickerRowVM(this, preset, true);
+                    PresetRows.Add(row);
+
+                    if (preset.SlotIndex == 1)
+                    {
+                        firstPresetRow = row;
+                    }
+                }
+            }
+
+            if (firstPresetRow != null)
+            {
+                SelectRow(firstPresetRow);
             }
         }
 

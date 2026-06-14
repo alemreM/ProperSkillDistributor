@@ -1,8 +1,10 @@
 using System.Runtime.CompilerServices;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
+using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 
 namespace ProperSkillDistributor
@@ -194,22 +196,47 @@ namespace ProperSkillDistributor
             }
 
             int assignedSlot = behavior.GetAssignedPresetSlot(hero);
+            List<SkillPreset> presets = behavior.GetPresets();
 
-            UsePresetRows.Add(new PresetAssignmentRowVM(
-                this,
-                0,
-                "None",
-                "Do not use a preset for this character.",
-                assignedSlot == 0));
-
-            foreach (SkillPreset preset in behavior.GetPresets())
+            if (MBSaveLoad.CurrentVersion.IsOlderThan(ApplicationVersion.FromString("v1.4.0", 0)))
             {
                 UsePresetRows.Add(new PresetAssignmentRowVM(
                     this,
-                    preset.SlotIndex,
-                    preset.Name,
-                    preset.IsConfigured ? "Configured" : "Not configured",
-                    assignedSlot == preset.SlotIndex));
+                    0,
+                    "None",
+                    "Do not use a preset for this character.",
+                    assignedSlot == 0));
+
+                foreach (SkillPreset preset in presets)
+                {
+                    UsePresetRows.Add(new PresetAssignmentRowVM(
+                        this,
+                        preset.SlotIndex,
+                        preset.Name,
+                        preset.IsConfigured ? "Configured" : "Not configured",
+                        assignedSlot == preset.SlotIndex));
+                }
+            }
+            else
+            {
+                for (int i = presets.Count - 1; i >= 0; i--)
+                {
+                    SkillPreset preset = presets[i];
+
+                    UsePresetRows.Add(new PresetAssignmentRowVM(
+                        this,
+                        preset.SlotIndex,
+                        preset.Name,
+                        preset.IsConfigured ? "Configured" : "Not configured",
+                        assignedSlot == preset.SlotIndex));
+                }
+
+                UsePresetRows.Add(new PresetAssignmentRowVM(
+                    this,
+                    0,
+                    "None",
+                    "Do not use a preset for this character.",
+                    assignedSlot == 0));
             }
         }
     }
