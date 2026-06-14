@@ -20,6 +20,7 @@ namespace ProperSkillDistributor
         private string _descriptionText;
         private string _focusFloorText;
         private string _attributeFloorText;
+        private bool _spendLeftoverPoints;
 
         [DataSourceProperty]
         public MBBindingList<PresetPickerRowVM> PresetRows { get; private set; }
@@ -80,6 +81,20 @@ namespace ProperSkillDistributor
             }
         }
 
+        [DataSourceProperty]
+        public bool SpendLeftoverPoints
+        {
+            get { return _spendLeftoverPoints; }
+            set
+            {
+                if (value != _spendLeftoverPoints)
+                {
+                    _spendLeftoverPoints = value;
+                    OnPropertyChangedWithValue(value, "SpendLeftoverPoints");
+                }
+            }
+        }
+
         public PresetPickerVM(
             SkillPresetBehavior presets,
             Action leaveAddPresets,
@@ -92,6 +107,7 @@ namespace ProperSkillDistributor
             PresetRows = new MBBindingList<PresetPickerRowVM>();
 
             RefreshFloorText();
+            RefreshSpendLeftoverPoints();
             FillPresetSlots();
         }
 
@@ -160,6 +176,25 @@ namespace ProperSkillDistributor
 
         [DataSourceMethod]
         public void ExecuteHideFloorHint()
+        {
+            MBInformationManager.HideInformations();
+        }
+
+        [DataSourceMethod]
+        public void ExecuteToggleSpendLeftoverPoints()
+        {
+            _presets.ToggleSpendLeftoverPoints();
+            RefreshSpendLeftoverPoints();
+        }
+
+        [DataSourceMethod]
+        public void ExecuteShowSpendLeftoverHint()
+        {
+            MBInformationManager.ShowHint(GetSpendLeftoverPointsHint());
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHideSpendLeftoverHint()
         {
             MBInformationManager.HideInformations();
         }
@@ -322,11 +357,20 @@ namespace ProperSkillDistributor
         {
             return "Attribute floor. Assigned attributes are filled to this value before the preset starts targeting other skills with higher values (if their target value is over the floor value). Use - / + to change it.";
         }
+        private string GetSpendLeftoverPointsHint()
+        {
+            return "On: after every preset target is reached, extra points will keep being allocated into the highest target assigned skill or attribute that is not maxed yet.\n"
+                + "Off: stop when preset target is reached for every skill and attribute.";
+        }
 
         private void RefreshFloorText()
         {
             FocusFloorText = "Focus " + _presets.FocusFloorLimit;
             AttributeFloorText = "Attr " + _presets.AttributeFloorLimit;
+        }
+        private void RefreshSpendLeftoverPoints()
+        {
+            SpendLeftoverPoints = _presets.SpendLeftoverPoints;
         }
 
         private void FillPresetSlots()

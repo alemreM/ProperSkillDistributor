@@ -22,6 +22,12 @@ namespace ProperSkillDistributor
         [SaveableField(5)]
         private bool _floorLimitsInitialized;
 
+        [SaveableField(6)]
+        private bool _spendLeftoverPoints;
+
+        [SaveableField(7)]
+        private bool _spendLeftoverPointsInitialized;
+
         public override void RegisterEvents()
         {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -36,6 +42,8 @@ namespace ProperSkillDistributor
             dataStore.SyncData("_focusFloorLimit", ref _focusFloorLimit);
             dataStore.SyncData("_attributeFloorLimit", ref _attributeFloorLimit);
             dataStore.SyncData("_floorLimitsInitialized", ref _floorLimitsInitialized);
+            dataStore.SyncData("_spendLeftoverPoints", ref _spendLeftoverPoints);
+            dataStore.SyncData("_spendLeftoverPointsInitialized", ref _spendLeftoverPointsInitialized);
 
             RepairPresetSlotsAfterLoad();
         }
@@ -60,6 +68,16 @@ namespace ProperSkillDistributor
         public int AttributeFloorLimit
         {
             get { return _attributeFloorLimit; }
+        }
+
+        public bool SpendLeftoverPoints
+        {
+            get { return _spendLeftoverPoints; }
+        }
+
+        public void ToggleSpendLeftoverPoints()
+        {
+            _spendLeftoverPoints = !_spendLeftoverPoints;
         }
 
         public void IncreaseFocusFloorLimit()
@@ -381,6 +399,13 @@ namespace ProperSkillDistributor
                 _attributeFloorLimit = 10;
                 _floorLimitsInitialized = true;
             }
+
+            if (!_spendLeftoverPointsInitialized)
+            {
+                _spendLeftoverPoints = true;
+                _spendLeftoverPointsInitialized = true;
+            }
+
             _focusFloorLimit = System.Math.Max(0, System.Math.Min(5, _focusFloorLimit));
             _attributeFloorLimit = System.Math.Max(0, System.Math.Min(10, _attributeFloorLimit));
 

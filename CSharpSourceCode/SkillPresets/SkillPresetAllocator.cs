@@ -20,6 +20,7 @@ namespace ProperSkillDistributor
             preset.RebuildAfterLoad();
 
             SkillPresetBehavior behavior = SkillPresetBehavior.Current;
+            bool spendLeftoverPoints = behavior == null || behavior.SpendLeftoverPoints;
             HeroDeveloper developer = hero.HeroDeveloper;
             Hero mimicHero = null;
 
@@ -87,6 +88,7 @@ namespace ProperSkillDistributor
 
             int maxAttribute = Campaign.Current.Models.CharacterDevelopmentModel.MaxAttribute;
             int attributeFloorLimit = behavior != null ? behavior.AttributeFloorLimit : maxAttribute;
+            int attributePassCount = spendLeftoverPoints ? 3 : 2;
 
             while (developer.UnspentAttributePoints > 0)
             {
@@ -94,7 +96,7 @@ namespace ProperSkillDistributor
                 int pickedFloorTarget = 0;
                 int pickedTarget = 0;
 
-                for (int pass = 0; pass < 3 && picked == null; pass++)
+                for (int pass = 0; pass < attributePassCount && picked == null; pass++)
                 {
                     for (int i = 0; i < attributeLine.Count; i++)
                     {
@@ -154,6 +156,7 @@ namespace ProperSkillDistributor
 
             int maxFocus = Campaign.Current.Models.CharacterDevelopmentModel.MaxFocusPerSkill;
             int focusFloorLimit = behavior != null ? behavior.FocusFloorLimit : maxFocus;
+            int focusPassCount = spendLeftoverPoints ? 3 : 2;
 
             while (developer.UnspentFocusPoints > 0)
             {
@@ -162,7 +165,7 @@ namespace ProperSkillDistributor
                 int pickedTarget = 0;
                 int pickedAttributePriority = 0;
 
-                for (int pass = 0; pass < 3 && picked == null; pass++)
+                for (int pass = 0; pass < focusPassCount && picked == null; pass++)
                 {
                     for (int i = 0; i < focusLine.Count; i++)
                     {
@@ -299,7 +302,7 @@ namespace ProperSkillDistributor
 
         private static int GetFloorTarget(int target, int limit)
         {
-            return limit <= 0 || target <= limit ? target : limit;
+            return System.Math.Min(target, limit);
         }
 
         private static int GetSkillAttributePriority(SkillObject skill, List<KeyValuePair<CharacterAttribute, int>> attributeLine)
