@@ -95,6 +95,7 @@ namespace ProperSkillDistributor
                 CharacterAttribute picked = null;
                 int pickedFloorTarget = 0;
                 int pickedTarget = 0;
+                int pickedCurrent = 0;
 
                 for (int pass = 0; pass < attributePassCount && picked == null; pass++)
                 {
@@ -138,10 +139,11 @@ namespace ProperSkillDistributor
                                 pickedTarget = target;
                             }
                         }
-                        else if (target > pickedTarget)
+                        else if (CompareLeftoverTarget(current, target, pickedCurrent, pickedTarget) > 0)
                         {
                             picked = attribute;
                             pickedTarget = target;
+                            pickedCurrent = current;
                         }
                     }
                 }
@@ -163,6 +165,7 @@ namespace ProperSkillDistributor
                 SkillObject picked = null;
                 int pickedFloorTarget = 0;
                 int pickedTarget = 0;
+                int pickedCurrent = 0;
                 int pickedAttributePriority = 0;
 
                 for (int pass = 0; pass < focusPassCount && picked == null; pass++)
@@ -213,11 +216,17 @@ namespace ProperSkillDistributor
                                 pickedAttributePriority = attributePriority;
                             }
                         }
-                        else if (target > pickedTarget || target == pickedTarget && attributePriority > pickedAttributePriority)
+                        else
                         {
-                            picked = skill;
-                            pickedTarget = target;
-                            pickedAttributePriority = attributePriority;
+                            int leftoverOrder = CompareLeftoverTarget(current, target, pickedCurrent, pickedTarget);
+
+                            if (leftoverOrder > 0 || leftoverOrder == 0 && attributePriority > pickedAttributePriority)
+                            {
+                                picked = skill;
+                                pickedTarget = target;
+                                pickedCurrent = current;
+                                pickedAttributePriority = attributePriority;
+                            }
                         }
                     }
                 }
@@ -298,6 +307,42 @@ namespace ProperSkillDistributor
 
                 developer.AddPerk(perk);
             }
+        }
+
+        private static int CompareLeftoverTarget(int current, int target, int pickedCurrent, int pickedTarget)
+        {
+            if (pickedTarget <= 0)
+            {
+                return 1;
+            }
+
+            int extra = System.Math.Max(0, current - target);
+            int pickedExtra = System.Math.Max(0, pickedCurrent - pickedTarget);
+
+            long nextWeightedExtra = (long)(extra + 1) * pickedTarget;
+            long pickedNextWeightedExtra = (long)(pickedExtra + 1) * target;
+
+            if (nextWeightedExtra < pickedNextWeightedExtra)
+            {
+                return 1;
+            }
+
+            if (nextWeightedExtra > pickedNextWeightedExtra)
+            {
+                return -1;
+            }
+
+            if (target < pickedTarget)
+            {
+                return 1;
+            }
+
+            if (target > pickedTarget)
+            {
+                return -1;
+            }
+
+            return 0;
         }
 
         private static int GetFloorTarget(int target, int limit)
