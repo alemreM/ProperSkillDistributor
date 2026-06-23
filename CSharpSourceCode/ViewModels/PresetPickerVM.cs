@@ -14,6 +14,7 @@ namespace ProperSkillDistributor
         private readonly SkillPresetBehavior _presets;
         private readonly Action _leaveAddPresets;
         private readonly Action<int> _openEditorForSlot;
+        private readonly List<PresetSlotSnapshot> _presetsBeforeAddScreen;
 
         private PresetPickerRowVM _selectedRow;
         private string _titleText;
@@ -105,6 +106,7 @@ namespace ProperSkillDistributor
             _openEditorForSlot = openEditorForSlot;
 
             PresetRows = new MBBindingList<PresetPickerRowVM>();
+            _presetsBeforeAddScreen = TakePresetSnapshot();
 
             RefreshFloorText();
             RefreshSpendLeftoverPoints();
@@ -114,6 +116,7 @@ namespace ProperSkillDistributor
         [DataSourceMethod]
         public void ExecuteCancel()
         {
+            RestorePresetSnapshot();
             _leaveAddPresets();
         }
 
@@ -606,6 +609,77 @@ namespace ProperSkillDistributor
             }
 
             return availablePerkIds;
+        }
+
+        private List<PresetSlotSnapshot> TakePresetSnapshot()
+        {
+            List<PresetSlotSnapshot> snapshot = new List<PresetSlotSnapshot>();
+
+            foreach (SkillPreset preset in _presets.GetPresets())
+            {
+                preset.RebuildAfterLoad();
+                snapshot.Add(new PresetSlotSnapshot(preset));
+            }
+
+            return snapshot;
+        }
+
+        private void RestorePresetSnapshot()
+        {
+            foreach (PresetSlotSnapshot slot in _presetsBeforeAddScreen)
+            {
+                SkillPreset preset = _presets.GetPreset(slot.SlotIndex);
+
+                if (preset == null)
+                {
+                    continue;
+                }
+
+                if (!slot.IsConfigured)
+                {
+                    _presets.ClearPreset(slot.SlotIndex);
+                    _presets.RenamePreset(slot.SlotIndex, slot.Name);
+                }
+                else if (slot.IsMimicPreset)
+                {
+                    preset.ConfigureAsMimic(slot.MimicHeroStringId, slot.MimicHeroName);
+                }
+                else
+                {
+                    _presets.ConfigurePreset(
+                        slot.SlotIndex,
+                        slot.Name,
+                        new Dictionary<string, int>(slot.AttributeTargets),
+                        new Dictionary<string, int>(slot.SkillFocusTargets),
+                        new List<string>(slot.SelectedPerkIds));
+                }
+            }
+        }
+
+        private sealed class PresetSlotSnapshot
+        {
+            public readonly int SlotIndex;
+            public readonly string Name;
+            public readonly bool IsConfigured;
+            public readonly bool IsMimicPreset;
+            public readonly string MimicHeroStringId;
+            public readonly string MimicHeroName;
+            public readonly Dictionary<string, int> AttributeTargets;
+            public readonly Dictionary<string, int> SkillFocusTargets;
+            public readonly List<string> SelectedPerkIds;
+
+            public PresetSlotSnapshot(SkillPreset preset)
+            {
+                SlotIndex = preset.SlotIndex;
+                Name = preset.Name;
+                IsConfigured = preset.IsConfigured;
+                IsMimicPreset = preset.IsMimicPreset;
+                MimicHeroStringId = preset.MimicHeroStringId;
+                MimicHeroName = preset.MimicHeroName;
+                AttributeTargets = new Dictionary<string, int>(preset.AttributeTargets);
+                SkillFocusTargets = new Dictionary<string, int>(preset.SkillFocusTargets);
+                SelectedPerkIds = new List<string>(preset.SelectedPerkIds);
+            }
         }
 
         private static Tuple<bool, string> CheckPresetName(string name)

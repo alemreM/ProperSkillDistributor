@@ -10,6 +10,7 @@ namespace ProperSkillDistributor
         private string _nameText;
         private string _statusText;
         private bool _isSelected;
+        private bool _isHovered;
 
         public int SlotIndex { get; }
 
@@ -46,6 +47,17 @@ namespace ProperSkillDistributor
             }
         }
 
+        [DataSourceProperty]
+        public bool IsHovered
+        {
+            get { return _isHovered; }
+            set
+            {
+                _isHovered = value;
+                OnPropertyChangedWithValue(value, "IsHovered");
+            }
+        }
+
         public PresetAssignmentRowVM(
             CharacterScreenPresetMixin characterScreenControls,
             int slotIndex,
@@ -58,12 +70,25 @@ namespace ProperSkillDistributor
             _nameText = nameText;
             _statusText = statusText;
             _isSelected = isSelected;
+            _isHovered = false;
         }
 
         [DataSourceMethod]
         public void ExecuteSelect()
         {
             _characterScreenControls.SelectUsePreset(this);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverBegin()
+        {
+            IsHovered = true;
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverEnd()
+        {
+            IsHovered = false;
         }
     }
 }

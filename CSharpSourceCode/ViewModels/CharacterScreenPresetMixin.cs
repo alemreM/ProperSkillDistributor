@@ -125,6 +125,12 @@ namespace ProperSkillDistributor
             IsUsePresetDropdownOpen = !IsUsePresetDropdownOpen;
         }
 
+        [DataSourceMethod]
+        public void ExecuteCloseUsePresetDropdown()
+        {
+            IsUsePresetDropdownOpen = false;
+        }
+
         public void SelectUsePreset(PresetAssignmentRowVM row)
         {
             Hero hero = ViewModel?.CurrentCharacter?.Hero;

@@ -1,4 +1,5 @@
 using Bannerlord.UIExtenderEx.Attributes;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 
 namespace ProperSkillDistributor
@@ -16,6 +17,12 @@ namespace ProperSkillDistributor
         private bool _canMimic;
         private bool _canTemplates;
         private bool _canExport;
+        private bool _isSlotHovered;
+        private bool _isRenameHovered;
+        private bool _isClearHovered;
+        private bool _isMimicHovered;
+        private bool _isTemplatesHovered;
+        private bool _isExportHovered;
 
         public int SlotIndex { get; private set; }
 
@@ -146,6 +153,90 @@ namespace ProperSkillDistributor
             }
         }
 
+        [DataSourceProperty]
+        public bool IsSlotHovered
+        {
+            get { return _isSlotHovered; }
+            set
+            {
+                if (value != _isSlotHovered)
+                {
+                    _isSlotHovered = value;
+                    OnPropertyChangedWithValue(value, "IsSlotHovered");
+                }
+            }
+        }
+
+        [DataSourceProperty]
+        public bool IsRenameHovered
+        {
+            get { return _isRenameHovered; }
+            set
+            {
+                if (value != _isRenameHovered)
+                {
+                    _isRenameHovered = value;
+                    OnPropertyChangedWithValue(value, "IsRenameHovered");
+                }
+            }
+        }
+
+        [DataSourceProperty]
+        public bool IsClearHovered
+        {
+            get { return _isClearHovered; }
+            set
+            {
+                if (value != _isClearHovered)
+                {
+                    _isClearHovered = value;
+                    OnPropertyChangedWithValue(value, "IsClearHovered");
+                }
+            }
+        }
+
+        [DataSourceProperty]
+        public bool IsMimicHovered
+        {
+            get { return _isMimicHovered; }
+            set
+            {
+                if (value != _isMimicHovered)
+                {
+                    _isMimicHovered = value;
+                    OnPropertyChangedWithValue(value, "IsMimicHovered");
+                }
+            }
+        }
+
+        [DataSourceProperty]
+        public bool IsTemplatesHovered
+        {
+            get { return _isTemplatesHovered; }
+            set
+            {
+                if (value != _isTemplatesHovered)
+                {
+                    _isTemplatesHovered = value;
+                    OnPropertyChangedWithValue(value, "IsTemplatesHovered");
+                }
+            }
+        }
+
+        [DataSourceProperty]
+        public bool IsExportHovered
+        {
+            get { return _isExportHovered; }
+            set
+            {
+                if (value != _isExportHovered)
+                {
+                    _isExportHovered = value;
+                    OnPropertyChangedWithValue(value, "IsExportHovered");
+                }
+            }
+        }
+
         public PresetPickerRowVM(PresetPickerVM selector)
         {
             _selector = selector;
@@ -158,6 +249,7 @@ namespace ProperSkillDistributor
             CanTemplates = false;
             CanExport = false;
             SelectionText = string.Empty;
+            ClearHoverState();
         }
 
         public PresetPickerRowVM(
@@ -173,6 +265,7 @@ namespace ProperSkillDistributor
             CanTemplates = canRename;
             CanExport = canRename;
             SelectionText = string.Empty;
+            ClearHoverState();
 
             RefreshFromPreset(preset);
         }
@@ -181,6 +274,18 @@ namespace ProperSkillDistributor
         public void ExecuteSelect()
         {
             _selector.SelectRow(this);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverBegin()
+        {
+            IsSlotHovered = true;
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverEnd()
+        {
+            IsSlotHovered = false;
         }
 
         [DataSourceMethod]
@@ -211,6 +316,63 @@ namespace ProperSkillDistributor
         public void ExecuteExport()
         {
             _selector.ExportPreset(this);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteShowRenameHint()
+        {
+            IsRenameHovered = true;
+            MBInformationManager.ShowHint("Rename");
+        }
+
+        [DataSourceMethod]
+        public void ExecuteShowClearHint()
+        {
+            IsClearHovered = true;
+            MBInformationManager.ShowHint("Clear this preset slot");
+        }
+
+        [DataSourceMethod]
+        public void ExecuteShowMimicHint()
+        {
+            IsMimicHovered = true;
+            MBInformationManager.ShowHint("Use a hero as a dynamic skill set source");
+        }
+
+        [DataSourceMethod]
+        public void ExecuteShowTemplatesHint()
+        {
+            IsTemplatesHovered = true;
+            MBInformationManager.ShowHint("Copy a predefined template into this slot");
+        }
+
+        [DataSourceMethod]
+        public void ExecuteShowExportHint()
+        {
+            IsExportHovered = true;
+            MBInformationManager.ShowHint("Export this preset to be used later");
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHideOptionHint()
+        {
+            ClearActionHoverState();
+            MBInformationManager.HideInformations();
+        }
+
+        private void ClearHoverState()
+        {
+            IsSlotHovered = false;
+            ClearActionHoverState();
+        }
+
+        private void ClearActionHoverState()
+        {
+            IsRenameHovered = false;
+            IsClearHovered = false;
+            IsMimicHovered = false;
+            IsTemplatesHovered = false;
+            IsExportHovered = false;
         }
 
         public void RefreshFromPreset(SkillPreset preset)
