@@ -16,19 +16,24 @@ namespace ProperSkillDistributor
         private readonly SkillPresetBehavior _behavior;
         private readonly int _slotIndex;
         private readonly Action _afterClose;
+        private readonly PresetScreenTransitionOrigin _transitionOrigin;
 
         private CharacterDeveloperVM _dataSource;
         private GauntletLayer _gauntletLayer;
+        private PresetScreenTransition _screenTransition;
+        private bool _isClosing;
         private readonly CharacterDeveloperSpriteScope _spriteScope = new CharacterDeveloperSpriteScope();
 
         public PresetEditorScreen(
             SkillPresetBehavior behavior,
             int slotIndex,
-            Action afterClose = null)
+            Action afterClose = null,
+            PresetScreenTransitionOrigin transitionOrigin = PresetScreenTransitionOrigin.PresetManager)
         {
             _behavior = behavior;
             _slotIndex = slotIndex;
             _afterClose = afterClose;
+            _transitionOrigin = transitionOrigin;
         }
 
         protected override void OnInitialize()
@@ -56,6 +61,14 @@ namespace ProperSkillDistributor
             _gauntletLayer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("GenericCampaignPanelsGameKeyCategory"));
             _gauntletLayer.LoadMovie("CharacterDeveloper", _dataSource);
 
+            _screenTransition = new PresetScreenTransition(
+                _gauntletLayer.GetMovieIdentifier("CharacterDeveloper").Movie.RootWidget,
+                PresetScreenTransitionOrigin.PresetEditor);
+
+            _screenTransition.PlayPresetScreenSwap(
+                _transitionOrigin,
+                PresetScreenTransitionOrigin.PresetEditor);
+
             CharacterScreenPresetMixin.RefreshFor(_dataSource);
 
             AddLayer(_gauntletLayer);
@@ -70,6 +83,11 @@ namespace ProperSkillDistributor
         protected override void OnFrameTick(float dt)
         {
             base.OnFrameTick(dt);
+
+            if (TickScreenTransition(dt))
+            {
+                return;
+            }
 
             if (_gauntletLayer.Input.IsHotKeyReleased("Exit"))
             {
@@ -110,6 +128,7 @@ namespace ProperSkillDistributor
             _gauntletLayer.IsFocusLayer = false;
             ScreenManager.TryLoseFocus(_gauntletLayer);
             _gauntletLayer = null;
+            _screenTransition = null;
 
             _dataSource.OnFinalize();
             _dataSource = null;
@@ -141,7 +160,47 @@ namespace ProperSkillDistributor
             _dataSource.CharacterList.ExecuteSelectNextItem();
         }
 
+        private bool TickScreenTransition(float dt)
+        {
+            if (_screenTransition == null || !_screenTransition.IsHoldingScreenSwap)
+            {
+                return false;
+            }
+
+            bool transitionFinished = _screenTransition.TickScreenSwap(dt);
+
+            if (transitionFinished && _isClosing)
+            {
+                FinishCloseTransition();
+            }
+
+            return true;
+        }
+
         private void CloseScreen()
+        {
+            if (_isClosing)
+            {
+                return;
+            }
+
+            _isClosing = true;
+
+            if (_afterClose != null)
+            {
+                _screenTransition.PlayPresetScreenSwap(
+                    PresetScreenTransitionOrigin.PresetEditor,
+                    PresetScreenTransitionOrigin.PresetManager);
+            }
+            else
+            {
+                _screenTransition.PlayPresetScreenSwap(
+                    PresetScreenTransitionOrigin.PresetEditor,
+                    PresetScreenTransitionOrigin.CharacterScreen);
+            }
+        }
+
+        private void FinishCloseTransition()
         {
             ScreenManager.PopScreen();
 

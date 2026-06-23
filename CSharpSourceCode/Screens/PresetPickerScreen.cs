@@ -10,15 +10,29 @@ namespace ProperSkillDistributor
 {
     public class PresetPickerScreen : ScreenBase
     {
+        private enum CloseTarget
+        {
+            None,
+            CharacterScreen,
+            PresetEditor
+        }
+
         private readonly SkillPresetBehavior _behavior;
+        private readonly PresetScreenTransitionOrigin _transitionOrigin;
 
         private SpriteCategory _clanCategory;
         private PresetPickerVM _dataSource;
         private GauntletLayer _gauntletLayer;
+        private PresetScreenTransition _screenTransition;
+        private CloseTarget _closeTarget;
+        private int _slotIndexForEditor;
 
-        public PresetPickerScreen(SkillPresetBehavior behavior)
+        public PresetPickerScreen(
+            SkillPresetBehavior behavior,
+            PresetScreenTransitionOrigin transitionOrigin = PresetScreenTransitionOrigin.CharacterScreen)
         {
             _behavior = behavior;
+            _transitionOrigin = transitionOrigin;
         }
 
         protected override void OnInitialize()
@@ -41,6 +55,14 @@ namespace ProperSkillDistributor
             _gauntletLayer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("GenericCampaignPanelsGameKeyCategory"));
             _gauntletLayer.LoadMovie("PresetPicker", _dataSource);
 
+            _screenTransition = new PresetScreenTransition(
+                _gauntletLayer.GetMovieIdentifier("PresetPicker").Movie.RootWidget,
+                PresetScreenTransitionOrigin.PresetManager);
+
+            _screenTransition.PlayPresetScreenSwap(
+                _transitionOrigin,
+                PresetScreenTransitionOrigin.PresetManager);
+
             AddLayer(_gauntletLayer);
 
             _gauntletLayer.IsFocusLayer = true;
@@ -50,6 +72,11 @@ namespace ProperSkillDistributor
         protected override void OnFrameTick(float dt)
         {
             base.OnFrameTick(dt);
+
+            if (TickScreenTransition(dt))
+            {
+                return;
+            }
 
             if (_gauntletLayer.Input.IsHotKeyReleased("Exit"))
             {
@@ -71,6 +98,7 @@ namespace ProperSkillDistributor
             _gauntletLayer.IsFocusLayer = false;
             ScreenManager.TryLoseFocus(_gauntletLayer);
             _gauntletLayer = null;
+            _screenTransition = null;
 
             _dataSource.OnFinalize();
             _dataSource = null;
@@ -79,20 +107,68 @@ namespace ProperSkillDistributor
             _clanCategory = null;
         }
 
+        private bool TickScreenTransition(float dt)
+        {
+            if (_screenTransition == null || !_screenTransition.IsHoldingScreenSwap)
+            {
+                return false;
+            }
+
+            bool transitionFinished = _screenTransition.TickScreenSwap(dt);
+
+            if (transitionFinished && _closeTarget != CloseTarget.None)
+            {
+                FinishCloseTransition();
+            }
+
+            return true;
+        }
+
         private void CloseScreen()
         {
+            if (_closeTarget != CloseTarget.None)
+            {
+                return;
+            }
+
+            _closeTarget = CloseTarget.CharacterScreen;
             CharacterScreenFocusAfterPopup.RequestFocusRestore("selector close");
-            ScreenManager.PopScreen();
+
+            _screenTransition.PlayPresetScreenSwap(
+                PresetScreenTransitionOrigin.PresetManager,
+                PresetScreenTransitionOrigin.CharacterScreen);
         }
 
         private void OpenPresetEditor(int slotIndex)
         {
+            if (_closeTarget != CloseTarget.None)
+            {
+                return;
+            }
+
+            _slotIndexForEditor = slotIndex;
+            _closeTarget = CloseTarget.PresetEditor;
+
+            _screenTransition.PlayPresetScreenSwap(
+                PresetScreenTransitionOrigin.PresetManager,
+                PresetScreenTransitionOrigin.PresetEditor);
+        }
+
+        private void FinishCloseTransition()
+        {
+            CloseTarget finishedTarget = _closeTarget;
+            _closeTarget = CloseTarget.None;
+
             ScreenManager.PopScreen();
 
-            ScreenManager.PushScreen(new PresetEditorScreen(
-                _behavior,
-                slotIndex,
-                () => ScreenManager.PushScreen(new PresetPickerScreen(_behavior))));
+            if (finishedTarget == CloseTarget.PresetEditor)
+            {
+                ScreenManager.PushScreen(new PresetEditorScreen(
+                    _behavior,
+                    _slotIndexForEditor,
+                    () => ScreenManager.PushScreen(new PresetPickerScreen(_behavior, PresetScreenTransitionOrigin.PresetEditor)),
+                    PresetScreenTransitionOrigin.PresetManager));
+            }
         }
     }
 }
