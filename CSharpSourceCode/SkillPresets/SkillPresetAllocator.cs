@@ -21,12 +21,14 @@ namespace ProperSkillDistributor
 
             SkillPresetBehavior behavior = SkillPresetBehavior.Current;
             bool spendLeftoverPoints = behavior == null || behavior.SpendLeftoverPoints;
+            bool randomizeUnpickedPerks = behavior != null && behavior.RandomizeUnpickedPerks;
             HeroDeveloper developer = hero.HeroDeveloper;
             Hero mimicHero = null;
 
             List<KeyValuePair<CharacterAttribute, int>> attributeLine = new List<KeyValuePair<CharacterAttribute, int>>();
             List<KeyValuePair<SkillObject, int>> focusLine = new List<KeyValuePair<SkillObject, int>>();
             List<PerkObject> perkLine = new List<PerkObject>();
+            HashSet<string> presetPerkChoices = new HashSet<string>();
 
             if (preset.IsMimicPreset)
             {
@@ -70,6 +72,7 @@ namespace ProperSkillDistributor
                     if (perk.Skill != null && mimicHero.GetPerkValue(perk))
                     {
                         perkLine.Add(perk);
+                        ReservePresetPerkPair(perk, presetPerkChoices);
                     }
                 }
             }
@@ -82,6 +85,7 @@ namespace ProperSkillDistributor
                     if (perk != null && perk.Skill != null)
                     {
                         perkLine.Add(perk);
+                        ReservePresetPerkPair(perk, presetPerkChoices);
                     }
                 }
             }
@@ -258,55 +262,154 @@ namespace ProperSkillDistributor
                 return string.Compare(left.StringId, right.StringId, StringComparison.Ordinal);
             });
 
+            SpendPresetPerkLine(hero, developer, perkLine);
+
+            if (randomizeUnpickedPerks)
+            {
+                SpendOpenPerkTiersRandomly(hero, developer, presetPerkChoices);
+                SpendPresetPerkLine(hero, developer, perkLine);
+            }
+        }
+
+        private static void SpendPresetPerkLine(Hero hero, HeroDeveloper developer, List<PerkObject> perkLine)
+        {
             foreach (PerkObject perk in perkLine)
             {
-                if (hero.GetPerkValue(perk))
+                if (CanPickPerkTierNow(hero, perk))
                 {
-                    continue;
+                    developer.AddPerk(perk);
                 }
-
-                if (perk.AlternativePerk != null && hero.GetPerkValue(perk.AlternativePerk))
-                {
-                    continue;
-                }
-
-                if (hero.GetSkillValue(perk.Skill) < perk.RequiredSkillValue)
-                {
-                    continue;
-                }
-
-                PerkObject previousTier = null;
-
-                foreach (PerkObject candidate in PerkObject.All)
-                {
-                    if (candidate.Skill != perk.Skill || candidate.RequiredSkillValue >= perk.RequiredSkillValue)
-                    {
-                        continue;
-                    }
-
-                    if (previousTier == null || candidate.RequiredSkillValue > previousTier.RequiredSkillValue)
-                    {
-                        previousTier = candidate;
-                    }
-                }
-
-                if (previousTier != null)
-                {
-                    bool previousTierPicked = hero.GetPerkValue(previousTier);
-
-                    if (!previousTierPicked && previousTier.AlternativePerk != null)
-                    {
-                        previousTierPicked = hero.GetPerkValue(previousTier.AlternativePerk);
-                    }
-
-                    if (!previousTierPicked)
-                    {
-                        continue;
-                    }
-                }
-
-                developer.AddPerk(perk);
             }
+        }
+
+        private static void ReservePresetPerkPair(PerkObject perk, HashSet<string> presetPerkChoices)
+        {
+            presetPerkChoices.Add(perk.StringId);
+
+            if (perk.AlternativePerk != null)
+            {
+                presetPerkChoices.Add(perk.AlternativePerk.StringId);
+            }
+        }
+
+        private static void SpendOpenPerkTiersRandomly(Hero hero, HeroDeveloper developer, HashSet<string> presetPerkChoices)
+        {
+            List<PerkObject> openPerkTiers = new List<PerkObject>();
+
+            foreach (PerkObject perk in PerkObject.All)
+            {
+                if (perk.Skill == null || PresetAlreadyOwnsThisTier(perk, presetPerkChoices))
+                {
+                    continue;
+                }
+
+                if (perk.AlternativePerk != null && string.Compare(perk.StringId, perk.AlternativePerk.StringId, StringComparison.Ordinal) > 0)
+                {
+                    continue;
+                }
+
+                openPerkTiers.Add(perk);
+            }
+
+            openPerkTiers.Sort(ComparePerkPlanOrder);
+
+            for (int i = 0; i < openPerkTiers.Count; i++)
+            {
+                PerkObject perk = openPerkTiers[i];
+
+                if (!CanPickPerkTierNow(hero, perk))
+                {
+                    continue;
+                }
+
+                List<PerkObject> randomChoices = new List<PerkObject> { perk };
+
+                if (perk.AlternativePerk != null && CanPickPerkTierNow(hero, perk.AlternativePerk))
+                {
+                    randomChoices.Add(perk.AlternativePerk);
+                }
+
+                developer.AddPerk(randomChoices[MBRandom.RandomInt(randomChoices.Count)]);
+            }
+        }
+
+        private static bool PresetAlreadyOwnsThisTier(PerkObject perk, HashSet<string> presetPerkChoices)
+        {
+            if (presetPerkChoices.Contains(perk.StringId))
+            {
+                return true;
+            }
+
+            return perk.AlternativePerk != null && presetPerkChoices.Contains(perk.AlternativePerk.StringId);
+        }
+
+        private static bool CanPickPerkTierNow(Hero hero, PerkObject perk)
+        {
+            if (hero.GetPerkValue(perk))
+            {
+                return false;
+            }
+
+            if (perk.AlternativePerk != null && hero.GetPerkValue(perk.AlternativePerk))
+            {
+                return false;
+            }
+
+            if (hero.GetSkillValue(perk.Skill) < perk.RequiredSkillValue)
+            {
+                return false;
+            }
+
+            return PreviousPerkTierPicked(hero, perk);
+        }
+
+        private static bool PreviousPerkTierPicked(Hero hero, PerkObject perk)
+        {
+            PerkObject previousTier = null;
+
+            foreach (PerkObject candidate in PerkObject.All)
+            {
+                if (candidate.Skill != perk.Skill || candidate.RequiredSkillValue >= perk.RequiredSkillValue)
+                {
+                    continue;
+                }
+
+                if (previousTier == null || candidate.RequiredSkillValue > previousTier.RequiredSkillValue)
+                {
+                    previousTier = candidate;
+                }
+            }
+
+            if (previousTier == null)
+            {
+                return true;
+            }
+
+            if (hero.GetPerkValue(previousTier))
+            {
+                return true;
+            }
+
+            return previousTier.AlternativePerk != null && hero.GetPerkValue(previousTier.AlternativePerk);
+        }
+
+        private static int ComparePerkPlanOrder(PerkObject left, PerkObject right)
+        {
+            int skillOrder = string.Compare(left.Skill.StringId, right.Skill.StringId, StringComparison.Ordinal);
+
+            if (skillOrder != 0)
+            {
+                return skillOrder;
+            }
+
+            int tierOrder = left.RequiredSkillValue.CompareTo(right.RequiredSkillValue);
+
+            if (tierOrder != 0)
+            {
+                return tierOrder;
+            }
+
+            return string.Compare(left.StringId, right.StringId, StringComparison.Ordinal);
         }
 
         private static int CompareLeftoverTarget(int current, int target, int pickedCurrent, int pickedTarget)

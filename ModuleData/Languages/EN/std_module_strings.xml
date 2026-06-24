@@ -32,6 +32,8 @@
     <string id="edit" text="Edit" />
     <string id="continue" text="Continue" />
     <string id="spend_leftover_points" text="Spend leftover points :" />
+    <string id="random_unpicked_perks" text="Randomize unpicked perks :" />
+    <string id="random_unpicked_perks_hint" text="On: if a hero unlocks a perk tier not defined by their preset, a random available perk from that tier will be chosen randomly.{newline}Off: only perks defined in the preset are assigned." />
     <string id="rename_preset" text="Rename Preset" />
     <string id="enter_preset_name" text="Enter preset name." />
     <string id="clear_preset" text="Clear Preset" />

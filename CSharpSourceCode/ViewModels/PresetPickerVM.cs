@@ -19,6 +19,7 @@ namespace ProperSkillDistributor
             Edit,
             Continue,
             LeftoverToggle,
+            RandomPerksToggle,
             FocusFloorMinus,
             FocusFloorPlus,
             AttributeFloorMinus,
@@ -39,8 +40,10 @@ namespace ProperSkillDistributor
         private string _footerEditText;
         private string _footerContinueText;
         private string _leftoverToggleText;
+        private string _randomPerksToggleText;
         private PickerHover _hoveredPart;
         private bool _spendLeftoverPoints;
+        private bool _randomizeUnpickedPerks;
 
         [DataSourceProperty]
         public MBBindingList<PresetPickerRowVM> PresetRows { get; private set; }
@@ -130,6 +133,20 @@ namespace ProperSkillDistributor
         }
 
         [DataSourceProperty]
+        public string RandomUnpickedPerksText
+        {
+            get { return _randomPerksToggleText; }
+            set
+            {
+                if (value != _randomPerksToggleText)
+                {
+                    _randomPerksToggleText = value;
+                    OnPropertyChangedWithValue(value, "RandomUnpickedPerksText");
+                }
+            }
+        }
+
+        [DataSourceProperty]
         public string FocusFloorText
         {
             get { return _focusFloorText; }
@@ -182,6 +199,12 @@ namespace ProperSkillDistributor
         }
 
         [DataSourceProperty]
+        public bool IsRandomUnpickedPerksHovered
+        {
+            get { return _hoveredPart == PickerHover.RandomPerksToggle; }
+        }
+
+        [DataSourceProperty]
         public bool IsDecreaseFocusFloorHovered
         {
             get { return _hoveredPart == PickerHover.FocusFloorMinus; }
@@ -219,6 +242,20 @@ namespace ProperSkillDistributor
             }
         }
 
+        [DataSourceProperty]
+        public bool RandomizeUnpickedPerks
+        {
+            get { return _randomizeUnpickedPerks; }
+            set
+            {
+                if (value != _randomizeUnpickedPerks)
+                {
+                    _randomizeUnpickedPerks = value;
+                    OnPropertyChangedWithValue(value, "RandomizeUnpickedPerks");
+                }
+            }
+        }
+
         public PresetPickerVM(
             SkillPresetBehavior presets,
             Action leaveAddPresets,
@@ -235,8 +272,10 @@ namespace ProperSkillDistributor
             EditText = new TextObject("{=edit}Edit").ToString();
             ContinueText = new TextObject("{=continue}Continue").ToString();
             SpendLeftoverPointsText = new TextObject("{=spend_leftover_points}Spend leftover points :").ToString();
+            RandomUnpickedPerksText = new TextObject("{=random_unpicked_perks}Randomize unpicked perks :").ToString();
 
             RefreshFloorText();
+            RefreshRandomizeUnpickedPerks();
             RefreshSpendLeftoverPoints();
             FillPresetSlots();
         }
@@ -343,6 +382,27 @@ namespace ProperSkillDistributor
         }
 
         [DataSourceMethod]
+        public void ExecuteToggleRandomizeUnpickedPerks()
+        {
+            _presets.ToggleRandomizeUnpickedPerks();
+            RefreshRandomizeUnpickedPerks();
+        }
+
+        [DataSourceMethod]
+        public void ExecuteShowRandomUnpickedPerksHint()
+        {
+            SetHoveredPart(PickerHover.RandomPerksToggle);
+            MBInformationManager.ShowHint(GetRandomUnpickedPerksHint());
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHideRandomUnpickedPerksHint()
+        {
+            SetHoveredPart(PickerHover.None);
+            MBInformationManager.HideInformations();
+        }
+
+        [DataSourceMethod]
         public void ExecuteShowSpendLeftoverHint()
         {
             SetHoveredPart(PickerHover.LeftoverToggle);
@@ -397,6 +457,7 @@ namespace ProperSkillDistributor
             OnPropertyChangedWithValue(IsEditHovered, "IsEditHovered");
             OnPropertyChangedWithValue(IsContinueHovered, "IsContinueHovered");
             OnPropertyChangedWithValue(IsSpendLeftoverHovered, "IsSpendLeftoverHovered");
+            OnPropertyChangedWithValue(IsRandomUnpickedPerksHovered, "IsRandomUnpickedPerksHovered");
             OnPropertyChangedWithValue(IsDecreaseFocusFloorHovered, "IsDecreaseFocusFloorHovered");
             OnPropertyChangedWithValue(IsIncreaseFocusFloorHovered, "IsIncreaseFocusFloorHovered");
             OnPropertyChangedWithValue(IsDecreaseAttributeFloorHovered, "IsDecreaseAttributeFloorHovered");
@@ -639,6 +700,11 @@ namespace ProperSkillDistributor
             return new TextObject("{=spend_leftover_hint}On: after every preset target is reached, extra points will keep being allocated into the highest target assigned skill or attribute that is not maxed yet.\nOff: stop when preset target is reached for every skill and attribute.").ToString();
         }
 
+        private string GetRandomUnpickedPerksHint()
+        {
+            return new TextObject("{=random_unpicked_perks_hint}On: if a hero unlocks a perk tier not defined by their preset, a random available perk from that tier will be chosen randomly.\nOff: only perks defined in the preset are assigned.").ToString();
+        }
+
         private void RefreshFloorText()
         {
             var focusFloorText = new TextObject("{=focus_floor_text}Focus {VALUE}");
@@ -649,6 +715,11 @@ namespace ProperSkillDistributor
             attributeFloorText.SetTextVariable("VALUE", _presets.AttributeFloorLimit);
             AttributeFloorText = attributeFloorText.ToString();
         }
+        private void RefreshRandomizeUnpickedPerks()
+        {
+            RandomizeUnpickedPerks = _presets.RandomizeUnpickedPerks;
+        }
+
         private void RefreshSpendLeftoverPoints()
         {
             SpendLeftoverPoints = _presets.SpendLeftoverPoints;

@@ -32,6 +32,8 @@
     <string id="edit" text="Değiştir" />
     <string id="continue" text="Devam" />
     <string id="spend_leftover_points" text="Arda Kalan Puanları Harca :" />
+    <string id="random_unpicked_perks" text="Seçilmemiş Perkleri Rastgele Dağıt :" />
+    <string id="random_unpicked_perks_hint" text="Açık: Önayarda Belirlenmemiş Bir Perk Açıldığı Zaman Rastgele Seçilir.{newline}Kapalı: Yalnızca Önayarda Açıkça Seçilen Perkler Atanır." />
     <string id="rename_preset" text="Önayarı Yeniden Adlandır" />
     <string id="enter_preset_name" text="Önayar Adını Gir" />
     <string id="clear_preset" text="Önayarı Temizle" />

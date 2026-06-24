@@ -157,11 +157,28 @@
 
           </Children>
         </BrushWidget>
-        <Widget Id="PresetTopControlsAnchor" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="900" SuggestedHeight="40" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="127">
+        <Widget Id="PresetTopControlsAnchor" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="900" SuggestedHeight="82" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="85">
           <Children>
-            <ListPanel Id="SpendLeftoverPointsControl" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
+            <ListPanel Id="RandomUnpickedPerksControl" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="36" HorizontalAlignment="Left" VerticalAlignment="Top" StackLayout.LayoutMethod="HorizontalLeftToRight">
               <Children>
-                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="170" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Brush.TextHorizontalAlignment="Left" Text="@SpendLeftoverPointsText" />
+                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="205" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Brush.TextHorizontalAlignment="Left" Text="@RandomUnpickedPerksText" />
+                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36" VerticalAlignment="Center" MarginLeft="2" ButtonType="Toggle" IsSelected="@RandomizeUnpickedPerks" Command.Click="ExecuteToggleRandomizeUnpickedPerks" Command.HoverBegin="ExecuteShowRandomUnpickedPerksHint" Command.HoverEnd="ExecuteHideRandomUnpickedPerksHint">
+                  <Children>
+                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#130C08D8" />
+                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#332015D8" IsVisible="@IsRandomUnpickedPerksHovered" />
+                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Top" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
+                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
+                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
+                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
+                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="20" Text="X" IsVisible="@RandomizeUnpickedPerks" />
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </ListPanel>
+
+            <ListPanel Id="SpendLeftoverPointsControl" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="36" HorizontalAlignment="Left" VerticalAlignment="Top" MarginTop="42" StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <Children>
+                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="205" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Brush.TextHorizontalAlignment="Left" Text="@SpendLeftoverPointsText" />
                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36" VerticalAlignment="Center" MarginLeft="2" ButtonType="Toggle" IsSelected="@SpendLeftoverPoints" Command.Click="ExecuteToggleSpendLeftoverPoints" Command.HoverBegin="ExecuteShowSpendLeftoverHint" Command.HoverEnd="ExecuteHideSpendLeftoverHint">
                   <Children>
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#130C08D8" />
@@ -176,7 +193,7 @@
               </Children>
             </ListPanel>
 
-            <ListPanel Id="PresetFloorControls" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
+            <ListPanel Id="PresetFloorControls" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="36" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="42" StackLayout.LayoutMethod="HorizontalLeftToRight">
               <Children>
 
                 <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="18" StackLayout.LayoutMethod="HorizontalLeftToRight">

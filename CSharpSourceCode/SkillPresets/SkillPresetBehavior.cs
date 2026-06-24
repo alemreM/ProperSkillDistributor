@@ -28,6 +28,9 @@ namespace ProperSkillDistributor
         [SaveableField(7)]
         private bool _spendLeftoverPointsInitialized;
 
+        [SaveableField(8)]
+        private bool _randomizeUnpickedPerks;
+
         public override void RegisterEvents()
         {
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
@@ -44,6 +47,7 @@ namespace ProperSkillDistributor
             dataStore.SyncData("_floorLimitsInitialized", ref _floorLimitsInitialized);
             dataStore.SyncData("_spendLeftoverPoints", ref _spendLeftoverPoints);
             dataStore.SyncData("_spendLeftoverPointsInitialized", ref _spendLeftoverPointsInitialized);
+            dataStore.SyncData("_randomizeUnpickedPerks", ref _randomizeUnpickedPerks);
 
             RepairPresetSlotsAfterLoad();
         }
@@ -75,9 +79,19 @@ namespace ProperSkillDistributor
             get { return _spendLeftoverPoints; }
         }
 
+        public bool RandomizeUnpickedPerks
+        {
+            get { return _randomizeUnpickedPerks; }
+        }
+
         public void ToggleSpendLeftoverPoints()
         {
             _spendLeftoverPoints = !_spendLeftoverPoints;
+        }
+
+        public void ToggleRandomizeUnpickedPerks()
+        {
+            _randomizeUnpickedPerks = !_randomizeUnpickedPerks;
         }
 
         public void IncreaseFocusFloorLimit()
