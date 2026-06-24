@@ -26,12 +26,13 @@ namespace ProperSkillDistributor
 
                         <Widget Id=""SkillPresetEditButtonFrame"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed"" SuggestedWidth=""155"" SuggestedHeight=""41"" Sprite=""BlankWhiteSquare_9"" Color=""#000000B8"">
                           <Children>
+                            <Widget WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Sprite=""BlankWhiteSquare_9"" Color=""#332015D8"" IsVisible=""@IsAddPresetsHovered"" />
                             <Widget WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""Fixed"" SuggestedHeight=""1"" VerticalAlignment=""Top"" Sprite=""BlankWhiteSquare_9"" Color=""#6E5A49DD"" />
                             <Widget WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""Fixed"" SuggestedHeight=""1"" VerticalAlignment=""Bottom"" Sprite=""BlankWhiteSquare_9"" Color=""#6E5A49DD"" />
                             <Widget WidthSizePolicy=""Fixed"" HeightSizePolicy=""StretchToParent"" SuggestedWidth=""1"" HorizontalAlignment=""Left"" Sprite=""BlankWhiteSquare_9"" Color=""#6E5A49DD"" />
                             <Widget WidthSizePolicy=""Fixed"" HeightSizePolicy=""StretchToParent"" SuggestedWidth=""1"" HorizontalAlignment=""Right"" Sprite=""BlankWhiteSquare_9"" Color=""#6E5A49DD"" />
 
-                            <ButtonWidget Id=""SkillPresetEditButton"" DoNotPassEventsToChildren=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Command.Click=""ExecuteOpenPresetEditorSelector"" UpdateChildrenStates=""true"">
+                            <ButtonWidget Id=""SkillPresetEditButton"" DoNotPassEventsToChildren=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Command.Click=""ExecuteOpenPresetEditorSelector"" Command.HoverBegin=""ExecuteHoverAddPresetsButton"" Command.HoverEnd=""ExecuteLeavePresetTopButton"" UpdateChildrenStates=""true"">
                               <Children>
                                 <TextWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Brush=""CharacterDeveloper.Title.Text"" Brush.FontSize=""18"" Text=""@AddPresetsText"" />
                               </Children>
@@ -47,12 +48,13 @@ namespace ProperSkillDistributor
 
                         <Widget Id=""SkillPresetUseButtonFrame"" WidthSizePolicy=""Fixed"" HeightSizePolicy=""Fixed"" SuggestedWidth=""290"" SuggestedHeight=""41"" HorizontalAlignment=""Left"" VerticalAlignment=""Top"" Sprite=""BlankWhiteSquare_9"" Color=""#000000B8"">
                           <Children>
+                            <Widget WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Sprite=""BlankWhiteSquare_9"" Color=""#332015D8"" IsVisible=""@IsUsePresetsHovered"" />
                             <Widget WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""Fixed"" SuggestedHeight=""1"" VerticalAlignment=""Top"" Sprite=""BlankWhiteSquare_9"" Color=""#6E5A49DD"" />
                             <Widget WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""Fixed"" SuggestedHeight=""1"" VerticalAlignment=""Bottom"" Sprite=""BlankWhiteSquare_9"" Color=""#6E5A49DD"" />
                             <Widget WidthSizePolicy=""Fixed"" HeightSizePolicy=""StretchToParent"" SuggestedWidth=""1"" HorizontalAlignment=""Left"" Sprite=""BlankWhiteSquare_9"" Color=""#6E5A49DD"" />
                             <Widget WidthSizePolicy=""Fixed"" HeightSizePolicy=""StretchToParent"" SuggestedWidth=""1"" HorizontalAlignment=""Right"" Sprite=""BlankWhiteSquare_9"" Color=""#6E5A49DD"" />
 
-                            <ButtonWidget Id=""SkillPresetUseButton"" DoNotPassEventsToChildren=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Command.Click=""ExecuteToggleUsePresetDropdown"" UpdateChildrenStates=""true"">
+                            <ButtonWidget Id=""SkillPresetUseButton"" DoNotPassEventsToChildren=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Command.Click=""ExecuteToggleUsePresetDropdown"" Command.HoverBegin=""ExecuteHoverUsePresetsButton"" Command.HoverEnd=""ExecuteLeavePresetTopButton"" UpdateChildrenStates=""true"">
                               <Children>
                                 <ListPanel DoNotAcceptEvents=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" StackLayout.LayoutMethod=""HorizontalLeftToRight"" MarginLeft=""12"" MarginRight=""10"">
                                   <Children>

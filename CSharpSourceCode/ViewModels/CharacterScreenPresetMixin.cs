@@ -13,12 +13,20 @@ namespace ProperSkillDistributor
     [ViewModelMixin("RefreshValues")]
     public class CharacterScreenPresetMixin : BaseViewModelMixin<CharacterDeveloperVM>
     {
+        private enum PresetTopButton
+        {
+            None,
+            AddPresets,
+            UsePresets
+        }
+
         private static readonly ConditionalWeakTable<CharacterDeveloperVM, CharacterScreenPresetMixin> _registeredMixins =
             new ConditionalWeakTable<CharacterDeveloperVM, CharacterScreenPresetMixin>();
 
         private string _usePresetsText;
         private bool _isUsePresetDropdownOpen;
         private bool _isSkillPresetControlsVisible;
+        private PresetTopButton _hoveredTopButton;
 
         public CharacterScreenPresetMixin(CharacterDeveloperVM viewModel)
             : base(viewModel)
@@ -75,6 +83,17 @@ namespace ProperSkillDistributor
             }
         }
 
+        [DataSourceProperty]
+        public bool IsAddPresetsHovered
+        {
+            get { return _hoveredTopButton == PresetTopButton.AddPresets; }
+        }
+
+        [DataSourceProperty]
+        public bool IsUsePresetsHovered
+        {
+            get { return _hoveredTopButton == PresetTopButton.UsePresets; }
+        }
 
         [DataSourceProperty]
         public string AddPresetsText
@@ -115,6 +134,9 @@ namespace ProperSkillDistributor
         [DataSourceMethod]
         public void ExecuteOpenPresetEditorSelector()
         {
+            IsUsePresetDropdownOpen = false;
+            SetHoveredTopButton(PresetTopButton.None);
+
             CharacterScreenPresetActions.OpenPresetEditorSelector(ViewModel);
         }
 
@@ -123,6 +145,36 @@ namespace ProperSkillDistributor
         {
             // avoid opening another screen over CharacterDeveloper
             ExecuteToggleUsePresetDropdown();
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverAddPresetsButton()
+        {
+            SetHoveredTopButton(PresetTopButton.AddPresets);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverUsePresetsButton()
+        {
+            SetHoveredTopButton(PresetTopButton.UsePresets);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteLeavePresetTopButton()
+        {
+            SetHoveredTopButton(PresetTopButton.None);
+        }
+
+        private void SetHoveredTopButton(PresetTopButton hoveredTopButton)
+        {
+            if (_hoveredTopButton == hoveredTopButton)
+            {
+                return;
+            }
+
+            _hoveredTopButton = hoveredTopButton;
+            OnPropertyChangedWithValue(IsAddPresetsHovered, "IsAddPresetsHovered");
+            OnPropertyChangedWithValue(IsUsePresetsHovered, "IsUsePresetsHovered");
         }
 
         [DataSourceMethod]

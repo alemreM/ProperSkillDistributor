@@ -12,6 +12,19 @@ namespace ProperSkillDistributor
 {
     public class PresetPickerVM : ViewModel
     {
+        private enum PickerHover
+        {
+            None,
+            Cancel,
+            Edit,
+            Continue,
+            LeftoverToggle,
+            FocusFloorMinus,
+            FocusFloorPlus,
+            AttributeFloorMinus,
+            AttributeFloorPlus
+        }
+
         private readonly SkillPresetBehavior _presets;
         private readonly Action _leaveAddPresets;
         private readonly Action<int> _openEditorForSlot;
@@ -22,6 +35,11 @@ namespace ProperSkillDistributor
         private string _descriptionText;
         private string _focusFloorText;
         private string _attributeFloorText;
+        private string _footerCancelText;
+        private string _footerEditText;
+        private string _footerContinueText;
+        private string _leftoverToggleText;
+        private PickerHover _hoveredPart;
         private bool _spendLeftoverPoints;
 
         [DataSourceProperty]
@@ -58,25 +76,57 @@ namespace ProperSkillDistributor
         [DataSourceProperty]
         public string CancelText
         {
-            get { return new TextObject("{=cancel}Cancel").ToString(); }
+            get { return _footerCancelText; }
+            set
+            {
+                if (value != _footerCancelText)
+                {
+                    _footerCancelText = value;
+                    OnPropertyChangedWithValue(value, "CancelText");
+                }
+            }
         }
 
         [DataSourceProperty]
         public string EditText
         {
-            get { return new TextObject("{=edit}Edit").ToString(); }
+            get { return _footerEditText; }
+            set
+            {
+                if (value != _footerEditText)
+                {
+                    _footerEditText = value;
+                    OnPropertyChangedWithValue(value, "EditText");
+                }
+            }
         }
 
         [DataSourceProperty]
         public string ContinueText
         {
-            get { return new TextObject("{=continue}Continue").ToString(); }
+            get { return _footerContinueText; }
+            set
+            {
+                if (value != _footerContinueText)
+                {
+                    _footerContinueText = value;
+                    OnPropertyChangedWithValue(value, "ContinueText");
+                }
+            }
         }
 
         [DataSourceProperty]
         public string SpendLeftoverPointsText
         {
-            get { return new TextObject("{=spend_leftover_points}Spend leftover points :").ToString(); }
+            get { return _leftoverToggleText; }
+            set
+            {
+                if (value != _leftoverToggleText)
+                {
+                    _leftoverToggleText = value;
+                    OnPropertyChangedWithValue(value, "SpendLeftoverPointsText");
+                }
+            }
         }
 
         [DataSourceProperty]
@@ -108,6 +158,54 @@ namespace ProperSkillDistributor
         }
 
         [DataSourceProperty]
+        public bool IsCancelHovered
+        {
+            get { return _hoveredPart == PickerHover.Cancel; }
+        }
+
+        [DataSourceProperty]
+        public bool IsEditHovered
+        {
+            get { return _hoveredPart == PickerHover.Edit; }
+        }
+
+        [DataSourceProperty]
+        public bool IsContinueHovered
+        {
+            get { return _hoveredPart == PickerHover.Continue; }
+        }
+
+        [DataSourceProperty]
+        public bool IsSpendLeftoverHovered
+        {
+            get { return _hoveredPart == PickerHover.LeftoverToggle; }
+        }
+
+        [DataSourceProperty]
+        public bool IsDecreaseFocusFloorHovered
+        {
+            get { return _hoveredPart == PickerHover.FocusFloorMinus; }
+        }
+
+        [DataSourceProperty]
+        public bool IsIncreaseFocusFloorHovered
+        {
+            get { return _hoveredPart == PickerHover.FocusFloorPlus; }
+        }
+
+        [DataSourceProperty]
+        public bool IsDecreaseAttributeFloorHovered
+        {
+            get { return _hoveredPart == PickerHover.AttributeFloorMinus; }
+        }
+
+        [DataSourceProperty]
+        public bool IsIncreaseAttributeFloorHovered
+        {
+            get { return _hoveredPart == PickerHover.AttributeFloorPlus; }
+        }
+
+        [DataSourceProperty]
         public bool SpendLeftoverPoints
         {
             get { return _spendLeftoverPoints; }
@@ -132,6 +230,11 @@ namespace ProperSkillDistributor
 
             PresetRows = new MBBindingList<PresetPickerRowVM>();
             _presetsBeforeAddScreen = TakePresetSnapshot();
+
+            CancelText = new TextObject("{=cancel}Cancel").ToString();
+            EditText = new TextObject("{=edit}Edit").ToString();
+            ContinueText = new TextObject("{=continue}Continue").ToString();
+            SpendLeftoverPointsText = new TextObject("{=spend_leftover_points}Spend leftover points :").ToString();
 
             RefreshFloorText();
             RefreshSpendLeftoverPoints();
@@ -160,6 +263,30 @@ namespace ProperSkillDistributor
             }
 
             _openEditorForSlot(_selectedRow.SlotIndex);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverCancelButton()
+        {
+            SetHoveredPart(PickerHover.Cancel);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverEditButton()
+        {
+            SetHoveredPart(PickerHover.Edit);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverContinueButton()
+        {
+            SetHoveredPart(PickerHover.Continue);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteLeavePickerButton()
+        {
+            SetHoveredPart(PickerHover.None);
         }
 
         [DataSourceMethod]
@@ -218,13 +345,62 @@ namespace ProperSkillDistributor
         [DataSourceMethod]
         public void ExecuteShowSpendLeftoverHint()
         {
+            SetHoveredPart(PickerHover.LeftoverToggle);
             MBInformationManager.ShowHint(GetSpendLeftoverPointsHint());
         }
 
         [DataSourceMethod]
         public void ExecuteHideSpendLeftoverHint()
         {
+            SetHoveredPart(PickerHover.None);
             MBInformationManager.HideInformations();
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverFocusFloorMinus()
+        {
+            SetHoveredPart(PickerHover.FocusFloorMinus);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverFocusFloorPlus()
+        {
+            SetHoveredPart(PickerHover.FocusFloorPlus);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverAttributeFloorMinus()
+        {
+            SetHoveredPart(PickerHover.AttributeFloorMinus);
+        }
+
+        [DataSourceMethod]
+        public void ExecuteHoverAttributeFloorPlus()
+        {
+            SetHoveredPart(PickerHover.AttributeFloorPlus);
+        }
+
+        private void SetHoveredPart(PickerHover hoveredPart)
+        {
+            if (_hoveredPart == hoveredPart)
+            {
+                return;
+            }
+
+            _hoveredPart = hoveredPart;
+            RefreshHoverBindings();
+        }
+
+        private void RefreshHoverBindings()
+        {
+            OnPropertyChangedWithValue(IsCancelHovered, "IsCancelHovered");
+            OnPropertyChangedWithValue(IsEditHovered, "IsEditHovered");
+            OnPropertyChangedWithValue(IsContinueHovered, "IsContinueHovered");
+            OnPropertyChangedWithValue(IsSpendLeftoverHovered, "IsSpendLeftoverHovered");
+            OnPropertyChangedWithValue(IsDecreaseFocusFloorHovered, "IsDecreaseFocusFloorHovered");
+            OnPropertyChangedWithValue(IsIncreaseFocusFloorHovered, "IsIncreaseFocusFloorHovered");
+            OnPropertyChangedWithValue(IsDecreaseAttributeFloorHovered, "IsDecreaseAttributeFloorHovered");
+            OnPropertyChangedWithValue(IsIncreaseAttributeFloorHovered, "IsIncreaseAttributeFloorHovered");
         }
 
         public void SelectRow(PresetPickerRowVM row)

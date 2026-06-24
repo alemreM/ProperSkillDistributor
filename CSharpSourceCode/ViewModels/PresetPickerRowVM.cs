@@ -7,23 +7,33 @@ namespace ProperSkillDistributor
 {
     public class PresetPickerRowVM : ViewModel
     {
+        private enum PresetRowHover
+        {
+            None,
+            Slot,
+            Rename,
+            Clear,
+            Mimic,
+            Templates,
+            Export
+        }
+
         private readonly PresetPickerVM _selector;
 
         private string _nameText;
         private string _statusText;
         private string _selectionText;
+        private string _clearButtonText;
+        private string _mimicButtonText;
+        private string _templatesButtonText;
+        private string _exportButtonText;
         private bool _isSelected;
         private bool _canRename;
         private bool _canClear;
         private bool _canMimic;
         private bool _canTemplates;
         private bool _canExport;
-        private bool _isSlotHovered;
-        private bool _isRenameHovered;
-        private bool _isClearHovered;
-        private bool _isMimicHovered;
-        private bool _isTemplatesHovered;
-        private bool _isExportHovered;
+        private PresetRowHover _hoveredPart;
 
         public int SlotIndex { get; private set; }
 
@@ -157,110 +167,93 @@ namespace ProperSkillDistributor
         [DataSourceProperty]
         public bool IsSlotHovered
         {
-            get { return _isSlotHovered; }
-            set
-            {
-                if (value != _isSlotHovered)
-                {
-                    _isSlotHovered = value;
-                    OnPropertyChangedWithValue(value, "IsSlotHovered");
-                }
-            }
+            get { return _hoveredPart == PresetRowHover.Slot; }
         }
 
         [DataSourceProperty]
         public bool IsRenameHovered
         {
-            get { return _isRenameHovered; }
-            set
-            {
-                if (value != _isRenameHovered)
-                {
-                    _isRenameHovered = value;
-                    OnPropertyChangedWithValue(value, "IsRenameHovered");
-                }
-            }
+            get { return _hoveredPart == PresetRowHover.Rename; }
         }
 
         [DataSourceProperty]
         public bool IsClearHovered
         {
-            get { return _isClearHovered; }
-            set
-            {
-                if (value != _isClearHovered)
-                {
-                    _isClearHovered = value;
-                    OnPropertyChangedWithValue(value, "IsClearHovered");
-                }
-            }
+            get { return _hoveredPart == PresetRowHover.Clear; }
         }
 
         [DataSourceProperty]
         public bool IsMimicHovered
         {
-            get { return _isMimicHovered; }
-            set
-            {
-                if (value != _isMimicHovered)
-                {
-                    _isMimicHovered = value;
-                    OnPropertyChangedWithValue(value, "IsMimicHovered");
-                }
-            }
+            get { return _hoveredPart == PresetRowHover.Mimic; }
         }
 
         [DataSourceProperty]
         public bool IsTemplatesHovered
         {
-            get { return _isTemplatesHovered; }
-            set
-            {
-                if (value != _isTemplatesHovered)
-                {
-                    _isTemplatesHovered = value;
-                    OnPropertyChangedWithValue(value, "IsTemplatesHovered");
-                }
-            }
+            get { return _hoveredPart == PresetRowHover.Templates; }
         }
 
         [DataSourceProperty]
         public bool IsExportHovered
         {
-            get { return _isExportHovered; }
-            set
-            {
-                if (value != _isExportHovered)
-                {
-                    _isExportHovered = value;
-                    OnPropertyChangedWithValue(value, "IsExportHovered");
-                }
-            }
+            get { return _hoveredPart == PresetRowHover.Export; }
         }
-
 
         [DataSourceProperty]
         public string ClearText
         {
-            get { return new TextObject("{=clear}Clear").ToString(); }
+            get { return _clearButtonText; }
+            set
+            {
+                if (value != _clearButtonText)
+                {
+                    _clearButtonText = value;
+                    OnPropertyChangedWithValue(value, "ClearText");
+                }
+            }
         }
 
         [DataSourceProperty]
         public string MimicText
         {
-            get { return new TextObject("{=mimic}Mimic").ToString(); }
+            get { return _mimicButtonText; }
+            set
+            {
+                if (value != _mimicButtonText)
+                {
+                    _mimicButtonText = value;
+                    OnPropertyChangedWithValue(value, "MimicText");
+                }
+            }
         }
 
         [DataSourceProperty]
         public string TemplatesText
         {
-            get { return new TextObject("{=templates}Templates").ToString(); }
+            get { return _templatesButtonText; }
+            set
+            {
+                if (value != _templatesButtonText)
+                {
+                    _templatesButtonText = value;
+                    OnPropertyChangedWithValue(value, "TemplatesText");
+                }
+            }
         }
 
         [DataSourceProperty]
         public string ExportText
         {
-            get { return new TextObject("{=export}Export").ToString(); }
+            get { return _exportButtonText; }
+            set
+            {
+                if (value != _exportButtonText)
+                {
+                    _exportButtonText = value;
+                    OnPropertyChangedWithValue(value, "ExportText");
+                }
+            }
         }
 
         public PresetPickerRowVM(PresetPickerVM selector)
@@ -269,13 +262,14 @@ namespace ProperSkillDistributor
             SlotIndex = 0;
             NameText = new TextObject("{=none}None").ToString();
             StatusText = new TextObject("{=do_not_use_preset}Do not use a preset for this character.").ToString();
+            SetActionButtonTexts();
             CanRename = false;
             CanClear = false;
             CanMimic = false;
             CanTemplates = false;
             CanExport = false;
             SelectionText = string.Empty;
-            ClearHoverState();
+            SetHoveredPart(PresetRowHover.None);
         }
 
         public PresetPickerRowVM(
@@ -290,10 +284,20 @@ namespace ProperSkillDistributor
             CanMimic = canRename;
             CanTemplates = canRename;
             CanExport = canRename;
+            SetActionButtonTexts();
             SelectionText = string.Empty;
-            ClearHoverState();
+            SetHoveredPart(PresetRowHover.None);
 
             RefreshFromPreset(preset);
+        }
+
+
+        private void SetActionButtonTexts()
+        {
+            ClearText = new TextObject("{=clear}Clear").ToString();
+            MimicText = new TextObject("{=mimic}Mimic").ToString();
+            TemplatesText = new TextObject("{=templates}Templates").ToString();
+            ExportText = new TextObject("{=export}Export").ToString();
         }
 
         [DataSourceMethod]
@@ -305,13 +309,13 @@ namespace ProperSkillDistributor
         [DataSourceMethod]
         public void ExecuteHoverBegin()
         {
-            IsSlotHovered = true;
+            SetHoveredPart(PresetRowHover.Slot);
         }
 
         [DataSourceMethod]
         public void ExecuteHoverEnd()
         {
-            IsSlotHovered = false;
+            SetHoveredPart(PresetRowHover.None);
         }
 
         [DataSourceMethod]
@@ -347,58 +351,64 @@ namespace ProperSkillDistributor
         [DataSourceMethod]
         public void ExecuteShowRenameHint()
         {
-            IsRenameHovered = true;
+            SetHoveredPart(PresetRowHover.Rename);
             MBInformationManager.ShowHint(new TextObject("{=rename}Rename").ToString());
         }
 
         [DataSourceMethod]
         public void ExecuteShowClearHint()
         {
-            IsClearHovered = true;
+            SetHoveredPart(PresetRowHover.Clear);
             MBInformationManager.ShowHint(new TextObject("{=clear_hint}Clear this preset slot").ToString());
         }
 
         [DataSourceMethod]
         public void ExecuteShowMimicHint()
         {
-            IsMimicHovered = true;
+            SetHoveredPart(PresetRowHover.Mimic);
             MBInformationManager.ShowHint(new TextObject("{=mimic_hint}Use a hero as a dynamic skill set source").ToString());
         }
 
         [DataSourceMethod]
         public void ExecuteShowTemplatesHint()
         {
-            IsTemplatesHovered = true;
+            SetHoveredPart(PresetRowHover.Templates);
             MBInformationManager.ShowHint(new TextObject("{=templates_hint}Copy a predefined template into this slot").ToString());
         }
 
         [DataSourceMethod]
         public void ExecuteShowExportHint()
         {
-            IsExportHovered = true;
+            SetHoveredPart(PresetRowHover.Export);
             MBInformationManager.ShowHint(new TextObject("{=export_hint}Export this preset to be used later").ToString());
         }
 
         [DataSourceMethod]
         public void ExecuteHideOptionHint()
         {
-            ClearActionHoverState();
+            SetHoveredPart(PresetRowHover.None);
             MBInformationManager.HideInformations();
         }
 
-        private void ClearHoverState()
+        private void SetHoveredPart(PresetRowHover hoveredPart)
         {
-            IsSlotHovered = false;
-            ClearActionHoverState();
+            if (_hoveredPart == hoveredPart)
+            {
+                return;
+            }
+
+            _hoveredPart = hoveredPart;
+            RefreshHoverBindings();
         }
 
-        private void ClearActionHoverState()
+        private void RefreshHoverBindings()
         {
-            IsRenameHovered = false;
-            IsClearHovered = false;
-            IsMimicHovered = false;
-            IsTemplatesHovered = false;
-            IsExportHovered = false;
+            OnPropertyChangedWithValue(IsSlotHovered, "IsSlotHovered");
+            OnPropertyChangedWithValue(IsRenameHovered, "IsRenameHovered");
+            OnPropertyChangedWithValue(IsClearHovered, "IsClearHovered");
+            OnPropertyChangedWithValue(IsMimicHovered, "IsMimicHovered");
+            OnPropertyChangedWithValue(IsTemplatesHovered, "IsTemplatesHovered");
+            OnPropertyChangedWithValue(IsExportHovered, "IsExportHovered");
         }
 
         public void RefreshFromPreset(SkillPreset preset)
