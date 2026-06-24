@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 
 namespace ProperSkillDistributor
 {
@@ -72,6 +73,13 @@ namespace ProperSkillDistributor
                     OnPropertyChangedWithValue(value, "IsSkillPresetControlsVisible");
                 }
             }
+        }
+
+
+        [DataSourceProperty]
+        public string AddPresetsText
+        {
+            get { return new TextObject("{=add_presets}Add Presets").ToString(); }
         }
 
         [DataSourceProperty]
@@ -172,7 +180,7 @@ namespace ProperSkillDistributor
 
             if (hero == null || behavior == null)
             {
-                UsePresetsText = "Use Presets: None";
+                UsePresetsText = new TextObject("{=use_presets_none}Use Presets: None").ToString();
                 return;
             }
 
@@ -180,12 +188,22 @@ namespace ProperSkillDistributor
 
             if (assignedSlot == 0)
             {
-                UsePresetsText = "Use Presets: None";
+                UsePresetsText = new TextObject("{=use_presets_none}Use Presets: None").ToString();
                 return;
             }
 
             SkillPreset preset = behavior.GetPreset(assignedSlot);
-            UsePresetsText = preset != null ? "Use Presets: " + preset.Name : "Use Presets: Preset " + assignedSlot;
+            if (preset != null)
+            {
+                var usePresetName = new TextObject("{=use_presets_name}Use Presets: {PRESET_NAME}");
+                usePresetName.SetTextVariable("PRESET_NAME", preset.Name);
+                UsePresetsText = usePresetName.ToString();
+                return;
+            }
+
+            var usePresetSlot = new TextObject("{=use_presets_slot}Use Presets: Preset {SLOT_INDEX}");
+            usePresetSlot.SetTextVariable("SLOT_INDEX", assignedSlot);
+            UsePresetsText = usePresetSlot.ToString();
         }
 
         private void RefreshUsePresetRows()
@@ -197,7 +215,7 @@ namespace ProperSkillDistributor
 
             if (hero == null || behavior == null)
             {
-                UsePresetRows.Add(new PresetAssignmentRowVM(this, 0, "None", "No active hero.", true));
+                UsePresetRows.Add(new PresetAssignmentRowVM(this, 0, new TextObject("{=none}None").ToString(), new TextObject("{=no_active_hero}No active hero.").ToString(), true));
                 return;
             }
 
@@ -209,8 +227,8 @@ namespace ProperSkillDistributor
                 UsePresetRows.Add(new PresetAssignmentRowVM(
                     this,
                     0,
-                    "None",
-                    "Do not use a preset for this character.",
+                    new TextObject("{=none}None").ToString(),
+                    new TextObject("{=do_not_use_preset}Do not use a preset for this character.").ToString(),
                     assignedSlot == 0));
 
                 foreach (SkillPreset preset in presets)
@@ -219,7 +237,7 @@ namespace ProperSkillDistributor
                         this,
                         preset.SlotIndex,
                         preset.Name,
-                        preset.IsConfigured ? "Configured" : "Not configured",
+                        preset.IsConfigured ? new TextObject("{=configured}Configured").ToString() : new TextObject("{=not_configured}Not configured").ToString(),
                         assignedSlot == preset.SlotIndex));
                 }
             }
@@ -233,15 +251,15 @@ namespace ProperSkillDistributor
                         this,
                         preset.SlotIndex,
                         preset.Name,
-                        preset.IsConfigured ? "Configured" : "Not configured",
+                        preset.IsConfigured ? new TextObject("{=configured}Configured").ToString() : new TextObject("{=not_configured}Not configured").ToString(),
                         assignedSlot == preset.SlotIndex));
                 }
 
                 UsePresetRows.Add(new PresetAssignmentRowVM(
                     this,
                     0,
-                    "None",
-                    "Do not use a preset for this character.",
+                    new TextObject("{=none}None").ToString(),
+                    new TextObject("{=do_not_use_preset}Do not use a preset for this character.").ToString(),
                     assignedSlot == 0));
             }
         }

@@ -2,8 +2,8 @@
   "presets": [
     {
       "id": "tor_battle_mage",
-      "name": "Battle Mage",
-      "description": "Battle mage prioritizing offensive spells",
+      "name": "{=template_tor_battle_mage_name}Battle Mage",
+      "description": "{=template_tor_battle_mage_description}Battle mage prioritizing offensive spells",
       "attributes": {
         "discipline": 10
       },
@@ -13,8 +13,8 @@
     },
 	{
       "id": "tor_support_mage",
-      "name": "Support Mage",
-      "description": "Support mage prioritizing buff, debuff or healing spells.",
+      "name": "{=template_tor_support_mage_name}Support Mage",
+      "description": "{=template_tor_support_mage_description}Support mage prioritizing buff, debuff or healing spells.",
       "attributes": {
         "discipline": 10
       },
@@ -24,8 +24,8 @@
     },
     {
       "id": "tor_faith",
-      "name": "Priest",
-      "description": "Faith template for warrior priests",
+      "name": "{=template_tor_faith_name}Priest",
+      "description": "{=template_tor_faith_description}Faith template for warrior priests",
       "attributes": {
         "discipline": 10
       },
@@ -35,8 +35,8 @@
     },
     {
       "id": "tor_gunpowder",
-      "name": "Master Gunner",
-      "description": "Gunpowder, engineering and crossbow template for siege efficiency. Gunpowder skill will be prioritized over crossbow",
+      "name": "{=template_tor_gunpowder_name}Master Gunner",
+      "description": "{=template_tor_gunpowder_description}Gunpowder, engineering and crossbow template for siege efficiency. Gunpowder skill will be prioritized over crossbow",
       "attributes": {
         "discipline": 10
       },

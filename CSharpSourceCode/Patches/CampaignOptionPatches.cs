@@ -1,6 +1,7 @@
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
+using TaleWorlds.Localization;
 
 namespace ProperSkillDistributor
 {
@@ -18,7 +19,7 @@ namespace ProperSkillDistributor
 
             __result = new CampaignOptionDisableStatus(
                 true,
-                "Disabled by Skill Presets.",
+                new TextObject("{=auto_perks_disabled}Disabled by Skill Distributor.").ToString(),
                 0f);
         }
     }

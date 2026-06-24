@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base type="string">
+  <tags>
+    <tag language="Türkçe" />
+  </tags>
+  <strings>
+    <string id="mod_name" text="Gelişmiş Beceri Dağıtıcı" />
+    <string id="auto_perks_disabled" text="Beceri Dağıtıcı tarafından devre dışı bırakıldı." />
+    <string id="skill_presets_title" text="Skill Presets" />
+    <string id="no_active_campaign_behavior" text="Aktif campaign behavior bulunamadı." />
+    <string id="ok" text="OK" />
+    <string id="add_presets" text="Önayar Ekle" />
+    <string id="add_presets_description" text="Düzenlemek için bir önayar seç. Slotlar isim değiştirilebilir, temizlenebilir, mevcut şablonlardan seçilebilir veya başka bir karakterin beceri setini kopyalayabilir." />
+    <string id="use_presets_none" text="Önayar kullan:" />
+    <string id="use_presets_name" text="Önayar kullan: {PRESET_NAME}" />
+    <string id="use_presets_slot" text="Önayar kullan: Önayar {SLOT_INDEX}" />
+    <string id="no_active_hero" text="Aktif karakter yok." />
+    <string id="none" text="Hiç" />
+    <string id="do_not_use_preset" text="Bu karakter için bir önayar kullanma." />
+    <string id="configured" text="Ayarlandı" />
+    <string id="not_configured" text="Ayarlanmadı" />
+    <string id="selected" text="Seçili" />
+    <string id="rename" text="Yeniden Adlandır" />
+    <string id="clear" text="Temizle" />
+    <string id="mimic" text="Taklit Et" />
+    <string id="templates" text="Şablonlar" />
+    <string id="export" text="Dışa Aktar" />
+    <string id="cancel" text="İptal" />
+    <string id="save" text="Kaydet" />
+    <string id="select" text="Seç" />
+    <string id="copy" text="Kopyala" />
+    <string id="edit" text="Değiştir" />
+    <string id="continue" text="Devam" />
+    <string id="spend_leftover_points" text="Arda Kalan Puanları Harca :" />
+    <string id="rename_preset" text="Önayarı Yeniden Adlandır" />
+    <string id="enter_preset_name" text="Önayar Adını Gir" />
+    <string id="clear_preset" text="Önayarı Temizle" />
+    <string id="clear_preset_question" text="{PRESET_NAME}'den Tüm Beceri Seti Ayarlarını Temizle" />
+    <string id="mimic_source_hint" text="Bu Karakterin Beceri Setini Dinamik Bir Önayar Kaynağı Olarak Kullan." />
+    <string id="no_mimic_hero_found" text="Önayar Taklidi İçin Uygun Kahraman Bulunamadı" />
+    <string id="mimic_skillset" text="Beceri Setini Taklit Et" />
+    <string id="mimic_skillset_description" text="Bir Karakter Seç. Bu Önayar Gerçek Zamanlı Olarak Seçtiğin Karakterin Beceri Seçimlerini Kopyalayacak." />
+    <string id="no_templates_found" text="Önayar Şablonları Bulunamadı." />
+    <string id="copy_template_into" text="Bu Şablonu {PRESET_NAME}'a Kaydet." />
+    <string id="templates_description" text="{PRESET_NAME}'a Kopyalamak İçin Bir Şablon Seç." />
+    <string id="only_configured_export" text="Yalnızca Ayarlanmış Önayarlar Dışa Aktarılabilir" />
+    <string id="export_preset" text="Önayarları Dışa Aktar" />
+    <string id="name_exported_template" text="Dışa Aktardığın Önayara Bir İsim Koy" />
+    <string id="export_successful" text="Dışa Aktarma Başarılı" />
+    <string id="export_failed" text="Dışa Aktarma Başarısız" />
+    <string id="focus_floor_hint" text="Odak Puanı Tabanı. Önayarda Bu Değerin Üzerinde Odak Puanı Atanan Becerilerin Tamamı Önce Bu Puana Getirilir. Ondan Sonra Puan Dağıtımı Devam Eder. Değiştirmek İçin - / + Kullan." />
+    <string id="attribute_floor_hint" text="Özellik Puanı Tabanı. Önayarda Bu Değerin Üzerinde Özellik Puanı Atanan Becerilerin Tamamı Önce Bu Puana Getirilir. Ondan Sonra Puan Dağıtımı Devam Eder. Değiştirmek İçin - / + Kullan." />
+    <string id="spend_leftover_hint" text="Açık: Bütün Önayar Hedeflerine Ulaşıldıktan Sonra, Kazanılan Ekstra Puanlar Henüz Maxlanmamış Odak ve Özellik Puanlarına Dağıtılmaya Devam Edecek.{newline}Kapalı: Her Odak ve Özellik Puanı Hedefine Ulaşılınca Dağıtımı Durdur." />
+    <string id="focus_floor_text" text="Odak {VALUE}" />
+    <string id="attribute_floor_text" text="Özellik {VALUE}" />
+    <string id="preset_name" text="Önayar {SLOT_INDEX}" />
+    <string id="mimic_preset_name" text="{HERO_NAME}&#x27;nın Beceri Seti" />
+    <string id="mimics" text="Taklit Et {HERO_NAME}" />
+    <string id="preset_name_empty" text="Önayar İsmi Boş Olamaz." />
+    <string id="clear_hint" text="Bu Önayar Slotunu Temizle" />
+    <string id="mimic_hint" text="Bir Kahramanı Gerçek Zamanlı Bir Beceri Seti Referansı Olarak Kullan." />
+    <string id="templates_hint" text="Şablonlardan Birini Bu Slota Kopyala" />
+    <string id="export_hint" text="Daha Sonra Kullanılmak Üzere Bu Önayarı Dışa Aktar" />
+    <string id="no_shipped_templates" text="Referans Şablonlar Bulunamadı. Oyun ve Mod Dosyalarınızın Bütünlüğünü Doğrulayın." />
+    <string id="templates_loaded_with_cuts" text="Şablonlar Eksik Olarak Yüklendi. Eksik ID Sayısı: {MISSING_COUNT}, Atlanılan Satır: {SKIPPED_COUNT}." />
+    <string id="template_file_missing" text="ModuleData/{FILE} Eksik." />
+    <string id="cant_read_predefined_templates" text="Şablonlar Okunamıyor. Kontrol Et: {FILE}. {REASON}" />
+    <string id="cant_read_optional_templates" text="Şablonlar Okunamıyor. Kontrol Et: Check {FILE}. {REASON}" />
+    <string id="template_file_no_rows" text="{FILE} Herhangi Bir Önayar Satırı İçermiyor." />
+    <string id="no_preset_store" text="Bunu Görmemelisin. Save'ini Yeniden Yükle." />
+    <string id="no_exportable_slots" text="Dışa Aktarılabilir Önayar Slotu Yok." />
+    <string id="mimic_source_missing" text="Taklit Edilen Kahraman Bulunamadı. Önayarı Dışa Aktarılamıyor." />
+    <string id="exported_to_user_file" text="Dışa Aktarıldı: ModuleData/{FILE}." />
+    <string id="cant_read_user_file" text="ModuleData/{FILE} Okunamıyor. Onu Düzelt veya Sil. Bannerlordu Yönetici Olarak Çalıştırmak Yardımcı Olabilir. {REASON}" />
+    <string id="exported_from_slot" text="Önayar Slotu{SLOT_INDEX}'ndan Dışa Aktarıldı." />
+    <string id="snapshot_from_mimic_slot" text="Taklit Edilen {SLOT_INDEX} Önayarından Dışa Aktarıldı." />
+    <string id="cant_write_user_file" text="ModuleData/{FILE} a Yazılamıyor. Bu Dosya Read-Only Olarak Ayarlanmış veya Bir Yerde Açık Olabilir. {REASON}" />
+    <string id="template_steward_name" text="İaşeci" />
+    <string id="template_steward_description" text="Parti İaşeci Şablonu." />
+    <string id="template_surgeon_name" text="Cerrah" />
+    <string id="template_surgeon_description" text="Parti Cerrah Şablonu." />
+    <string id="template_engineer_name" text="Mühendis" />
+    <string id="template_engineer_description" text="Parti Mühendis Şablonu." />
+    <string id="template_scout_name" text="İzci" />
+    <string id="template_scout_description" text="Parti İzci Şablonu." />
+    <string id="template_governor_name" text="Vali" />
+    <string id="template_governor_description" text="Yerleşke Vali Şablonu." />
+    <string id="template_infantry_commander_name" text="Piyade Komutanı" />
+    <string id="template_infantry_commander_description" text="Meydan Savaşları İçin Piyade Komutanı" />
+    <string id="template_ranged_commander_name" text="Okçu Komutanı" />
+    <string id="template_ranged_commander_description" text="Yay ve Kundaklı Yay Kullanan Birimler İçin Savaş Komutanı" />
+    <string id="template_cavalry_commander_name" text="Süvari Komutanı" />
+    <string id="template_cavalry_commander_description" text="At Sırtında Yakın Dövüşçü Komutanı" />
+    <string id="template_horse_archer_commander_name" text="Atlı Okçu Komutanı" />
+    <string id="template_horse_archer_commander_description" text="At Sırtında Menzilli Savaşçı Komutanı" />
+    <string id="template_party_leader_name" text="Parti Lideri" />
+    <string id="template_party_leader_description" text="Genel Parti Lideri Şablonu" />
+    <string id="template_caravanner_name" text="Karavancı" />
+    <string id="template_caravanner_description" text="Karavan Şablonu" />
+    <string id="template_tor_battle_mage_name" text="Savaş Büyücüsü" />
+    <string id="template_tor_battle_mage_description" text="Agresif Büyülere Önem Veren Büyücü Şablonu" />
+    <string id="template_tor_support_mage_name" text="Destek Büyücüsü" />
+    <string id="template_tor_support_mage_description" text="Destek Büyülerine Önem Veren Büyücü Şablonu" />
+    <string id="template_tor_faith_name" text="Rahip" />
+    <string id="template_tor_faith_description" text="Savaşçı Rahip Şablonu" />
+    <string id="template_tor_gunpowder_name" text="Silah Ustası" />
+    <string id="template_tor_gunpowder_description" text="Kuşatma Verimliliği İçin Barutlu Silahlar, Kundaklı Yaylar ve Mühendislik Şablonu" />
+  </strings>
+</base>

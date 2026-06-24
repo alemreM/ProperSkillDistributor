@@ -64,7 +64,7 @@
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
-                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Text="Clear" />
+                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Text="@ClearText" />
                               </Children>
                             </ButtonWidget>
                             <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="82" MarginLeft="8" Command.Click="ExecuteMimic" Command.HoverBegin="ExecuteShowMimicHint" Command.HoverEnd="ExecuteHideOptionHint" IsVisible="@CanMimic">
@@ -75,7 +75,7 @@
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
-                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Text="Mimic" />
+                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Text="@MimicText" />
                               </Children>
                             </ButtonWidget>
                             <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="104" MarginLeft="8" Command.Click="ExecuteTemplates" Command.HoverBegin="ExecuteShowTemplatesHint" Command.HoverEnd="ExecuteHideOptionHint" IsVisible="@CanTemplates">
@@ -86,7 +86,7 @@
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
-                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="16" Text="Templates" />
+                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="16" Text="@TemplatesText" />
                               </Children>
                             </ButtonWidget>
                             <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="82" MarginLeft="8" Command.Click="ExecuteExport" Command.HoverBegin="ExecuteShowExportHint" Command.HoverEnd="ExecuteHideOptionHint" IsVisible="@CanExport">
@@ -97,7 +97,7 @@
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                                 <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
-                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="16" Text="Export" />
+                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="16" Text="@ExportText" />
                               </Children>
                             </ButtonWidget>
 
@@ -125,7 +125,7 @@
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
-                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="22" Text="Cancel" />
+                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="22" Text="@CancelText" />
                   </Children>
                 </ButtonWidget>
                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="160" SuggestedHeight="48" Command.Click="ExecuteEdit" IsVisible="@IsEditMode" MarginRight="18">
@@ -135,7 +135,7 @@
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
-                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="22" Text="Edit" />
+                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="22" Text="@EditText" />
                   </Children>
                 </ButtonWidget>
                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="170" SuggestedHeight="48" Command.Click="ExecuteContinue">
@@ -145,7 +145,7 @@
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#5A3A25DD" />
-                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="22" Text="Continue" />
+                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="22" Text="@ContinueText" />
                   </Children>
                 </ButtonWidget>
 
@@ -158,7 +158,7 @@
           <Children>
             <ListPanel Id="SpendLeftoverPointsControl" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
               <Children>
-                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="170" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Brush.TextHorizontalAlignment="Left" Text="Spend leftover points :" />
+                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="170" Brush="CharacterDeveloper.Title.Text" Brush.FontSize="18" Brush.TextHorizontalAlignment="Left" Text="@SpendLeftoverPointsText" />
                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36" VerticalAlignment="Center" MarginLeft="2" ButtonType="Toggle" IsSelected="@SpendLeftoverPoints" Command.Click="ExecuteToggleSpendLeftoverPoints" Command.HoverBegin="ExecuteShowSpendLeftoverHint" Command.HoverEnd="ExecuteHideSpendLeftoverHint">
                   <Children>
                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#130C08D8" />

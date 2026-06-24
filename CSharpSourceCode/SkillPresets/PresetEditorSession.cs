@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper.PerkSelec
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.ObjectSystem;
+using TaleWorlds.Localization;
 
 namespace ProperSkillDistributor
 {
@@ -213,7 +214,14 @@ namespace ProperSkillDistributor
                 CharacterDeveloperHeroItemVM heroItem = viewModel.CurrentCharacter;
                 SkillPreset preset = _behavior.GetPreset(_slotIndex);
 
-                string presetName = preset != null ? preset.Name : "Preset " + _slotIndex;
+                string presetName = preset != null ? preset.Name : null;
+
+                if (presetName == null)
+                {
+                    var defaultPresetName = new TextObject("{=preset_name}Preset {SLOT_INDEX}");
+                    defaultPresetName.SetTextVariable("SLOT_INDEX", _slotIndex);
+                    presetName = defaultPresetName.ToString();
+                }
 
                 Dictionary<string, int> attributeTargets = new Dictionary<string, int>();
                 Dictionary<string, int> focusTargets = new Dictionary<string, int>();

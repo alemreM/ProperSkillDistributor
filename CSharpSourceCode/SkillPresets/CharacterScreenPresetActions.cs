@@ -2,6 +2,7 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.ScreenSystem;
+using TaleWorlds.Localization;
 
 namespace ProperSkillDistributor
 {
@@ -13,7 +14,7 @@ namespace ProperSkillDistributor
 
             if (behavior == null)
             {
-                ShowMessage("Skill Presets", "No active campaign behavior was found.");
+                ShowMessage(new TextObject("{=skill_presets_title}Skill Presets").ToString(), new TextObject("{=no_active_campaign_behavior}No active campaign behavior was found.").ToString());
                 return;
             }
 
@@ -32,7 +33,7 @@ namespace ProperSkillDistributor
                     message,
                     true,
                     false,
-                    "OK",
+                    new TextObject("{=ok}OK").ToString(),
                     string.Empty,
                     null,
                     null),

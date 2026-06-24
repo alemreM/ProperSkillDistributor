@@ -33,7 +33,7 @@ namespace ProperSkillDistributor
 
                             <ButtonWidget Id=""SkillPresetEditButton"" DoNotPassEventsToChildren=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Command.Click=""ExecuteOpenPresetEditorSelector"" UpdateChildrenStates=""true"">
                               <Children>
-                                <TextWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Brush=""CharacterDeveloper.Title.Text"" Brush.FontSize=""18"" Text=""Add Presets"" />
+                                <TextWidget DoNotAcceptEvents=""true"" WidthSizePolicy=""StretchToParent"" HeightSizePolicy=""StretchToParent"" Brush=""CharacterDeveloper.Title.Text"" Brush.FontSize=""18"" Text=""@AddPresetsText"" />
                               </Children>
                             </ButtonWidget>
                           </Children>

@@ -6,6 +6,7 @@ using System.Web.Script.Serialization;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.Core;
+using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 
 namespace ProperSkillDistributor
@@ -146,8 +147,8 @@ namespace ProperSkillDistributor
 
                 builds.Add(new TemplatePreset(
                     shippedBuild.id,
-                    shippedBuild.name,
-                    shippedBuild.description ?? string.Empty,
+                    LocalizeText(shippedBuild.name),
+                    LocalizeText(shippedBuild.description),
                     attributes,
                     focus,
                     perks));
@@ -162,15 +163,14 @@ namespace ProperSkillDistributor
 
             if (builds.Count == 0)
             {
-                problemNotes.Add("No shipped template matches. Validate your game files");
+                problemNotes.Add(new TextObject("{=no_shipped_templates}No shipped template matches. Validate your game files").ToString());
             }
             else if (missingFromThisInstall.Count > 0 || skippedRows > 0)
             {
-                problemNotes.Add("Templates loaded with cuts. Missing optional ids: "
-                    + missingFromThisInstall.Count
-                    + ", skipped rows: "
-                    + skippedRows
-                    + ".");
+                var cutMessage = new TextObject("{=templates_loaded_with_cuts}Templates loaded with cuts. Missing optional ids: {MISSING_COUNT}, skipped rows: {SKIPPED_COUNT}.");
+                cutMessage.SetTextVariable("MISSING_COUNT", missingFromThisInstall.Count);
+                cutMessage.SetTextVariable("SKIPPED_COUNT", skippedRows);
+                problemNotes.Add(cutMessage.ToString());
             }
 
             _templatesProblem = problemNotes.Count > 0 ? string.Join(" ", problemNotes.ToArray()) : null;
@@ -206,11 +206,15 @@ namespace ProperSkillDistributor
                 {
                     if (presetFile == "skill_presets.json")
                     {
-                        _templatesProblem = "ModuleData/skill_presets.json is missing.";
+                        var missingTemplateFile = new TextObject("{=template_file_missing}ModuleData/{FILE} is missing.");
+                        missingTemplateFile.SetTextVariable("FILE", "skill_presets.json");
+                        _templatesProblem = missingTemplateFile.ToString();
                         return new List<ShippedPresetRow>();
                     }
 
-                    readProblems.Add("ModuleData/" + presetFile + " is missing.");
+                    var missingOptionalFile = new TextObject("{=template_file_missing}ModuleData/{FILE} is missing.");
+                    missingOptionalFile.SetTextVariable("FILE", presetFile);
+                    readProblems.Add(missingOptionalFile.ToString());
                     continue;
                 }
 
@@ -224,11 +228,17 @@ namespace ProperSkillDistributor
                 {
                     if (presetFile == "skill_presets.json")
                     {
-                        _templatesProblem = "Cant read predefined preset templates. Check skill_presets.json. " + exception.Message;
+                        var unreadableTemplateFile = new TextObject("{=cant_read_predefined_templates}Cant read predefined preset templates. Check {FILE}. {REASON}");
+                        unreadableTemplateFile.SetTextVariable("FILE", "skill_presets.json");
+                        unreadableTemplateFile.SetTextVariable("REASON", exception.Message);
+                        _templatesProblem = unreadableTemplateFile.ToString();
                         return new List<ShippedPresetRow>();
                     }
 
-                    readProblems.Add("Cant read optional preset templates. Check " + presetFile + ". " + exception.Message);
+                    var unreadableOptionalFile = new TextObject("{=cant_read_optional_templates}Cant read optional preset templates. Check {FILE}. {REASON}");
+                    unreadableOptionalFile.SetTextVariable("FILE", presetFile);
+                    unreadableOptionalFile.SetTextVariable("REASON", exception.Message);
+                    readProblems.Add(unreadableOptionalFile.ToString());
                     continue;
                 }
 
@@ -236,11 +246,15 @@ namespace ProperSkillDistributor
                 {
                     if (presetFile == "skill_presets.json")
                     {
-                        _templatesProblem = "skill_presets.json exists but has no preset rows.";
+                        var emptyTemplateFile = new TextObject("{=template_file_no_rows}{FILE} exists but has no preset rows.");
+                        emptyTemplateFile.SetTextVariable("FILE", "skill_presets.json");
+                        _templatesProblem = emptyTemplateFile.ToString();
                         return new List<ShippedPresetRow>();
                     }
 
-                    readProblems.Add(presetFile + " exists but has no preset rows.");
+                    var emptyOptionalFile = new TextObject("{=template_file_no_rows}{FILE} exists but has no preset rows.");
+                    emptyOptionalFile.SetTextVariable("FILE", presetFile);
+                    readProblems.Add(emptyOptionalFile.ToString());
                     continue;
                 }
 
@@ -250,6 +264,12 @@ namespace ProperSkillDistributor
             _templatesProblem = readProblems.Count > 0 ? string.Join(" ", readProblems.ToArray()) : null;
 
             return rows;
+        }
+
+
+        private static string LocalizeText(string rawText)
+        {
+            return string.IsNullOrEmpty(rawText) ? string.Empty : new TextObject(rawText).ToString();
         }
 
         private sealed class ShippedPresetSheet

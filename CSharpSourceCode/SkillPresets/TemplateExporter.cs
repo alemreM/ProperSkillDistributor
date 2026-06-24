@@ -9,6 +9,7 @@ using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 
 namespace ProperSkillDistributor
 {
@@ -21,7 +22,7 @@ namespace ProperSkillDistributor
 
             if (presetStore == null)
             {
-                return "No preset store";
+                return new TextObject("{=no_preset_store}No preset store").ToString();
             }
 
             var exportSlots = new List<SkillPreset>();
@@ -58,7 +59,7 @@ namespace ProperSkillDistributor
 
             if (exportSlots.Count == 0)
             {
-                return "No exportable preset slots";
+                return new TextObject("{=no_exportable_slots}No exportable preset slots").ToString();
             }
 
             string jsonPath;
@@ -73,13 +74,13 @@ namespace ProperSkillDistributor
         {
             if (slot == null || !slot.IsConfigured)
             {
-                message = "Only configured presets can be exported.";
+                message = new TextObject("{=only_configured_export}Only configured presets can be exported.").ToString();
                 return false;
             }
 
             if (slot.IsMimicPreset && MimicSource(slot) == null)
             {
-                message = "Mimic source hero was not found, cant export snapshot.";
+                message = new TextObject("{=mimic_source_missing}Mimic source hero was not found, cant export snapshot.").ToString();
                 return false;
             }
 
@@ -90,7 +91,9 @@ namespace ProperSkillDistributor
                 return false;
             }
 
-            message = "Exported to ModuleData/your_presets.json.";
+            var exportedMessage = new TextObject("{=exported_to_user_file}Exported to ModuleData/{FILE}.");
+            exportedMessage.SetTextVariable("FILE", "your_presets.json");
+            message = exportedMessage.ToString();
             return true;
         }
 
@@ -123,7 +126,10 @@ namespace ProperSkillDistributor
                 }
                 catch (Exception exception)
                 {
-                    failReason = "Cant read ModuleData/your_presets.json. Fix or delete it first. Launching the game as admin may help." + exception.Message;
+                    var cantReadUserFile = new TextObject("{=cant_read_user_file}Cant read ModuleData/{FILE}. Fix or delete it first. Launching the game as admin may help. {REASON}");
+                    cantReadUserFile.SetTextVariable("FILE", "your_presets.json");
+                    cantReadUserFile.SetTextVariable("REASON", exception.Message);
+                    failReason = cantReadUserFile.ToString();
                     return false;
                 }
             }
@@ -135,7 +141,9 @@ namespace ProperSkillDistributor
                 row.name = exportSlots.Count == 1 && !string.IsNullOrWhiteSpace(popupName)
                     ? popupName.Trim()
                     : slot.Name;
-                row.description = "Exported from preset slot " + slot.SlotIndex + ".";
+                var exportedFromSlot = new TextObject("{=exported_from_slot}Exported from preset slot {SLOT_INDEX}.");
+                exportedFromSlot.SetTextVariable("SLOT_INDEX", slot.SlotIndex);
+                row.description = exportedFromSlot.ToString();
                 row.attributes = new Dictionary<string, int>();
                 row.focus = new Dictionary<string, int>();
                 row.perks = new List<string>();
@@ -175,7 +183,9 @@ namespace ProperSkillDistributor
                         }
                     }
 
-                    row.description = "Snapshot exported from mimic preset slot " + slot.SlotIndex + ".";
+                    var mimicSnapshotDescription = new TextObject("{=snapshot_from_mimic_slot}Snapshot exported from mimic preset slot {SLOT_INDEX}.");
+                    mimicSnapshotDescription.SetTextVariable("SLOT_INDEX", slot.SlotIndex);
+                    row.description = mimicSnapshotDescription.ToString();
                 }
                 else
                 {
@@ -289,7 +299,10 @@ namespace ProperSkillDistributor
             }
             catch (Exception exception)
             {
-                failReason = "Cant write ModuleData/your_presets.json. Maybe the file is read-only or open somewhere. " + exception.Message;
+                var cantWriteUserFile = new TextObject("{=cant_write_user_file}Cant write ModuleData/{FILE}. Maybe the file is read-only or open somewhere. {REASON}");
+                cantWriteUserFile.SetTextVariable("FILE", "your_presets.json");
+                cantWriteUserFile.SetTextVariable("REASON", exception.Message);
+                failReason = cantWriteUserFile.ToString();
                 return false;
             }
         }

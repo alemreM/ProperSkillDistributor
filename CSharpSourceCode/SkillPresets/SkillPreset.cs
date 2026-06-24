@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TaleWorlds.SaveSystem;
+using TaleWorlds.Localization;
 
 namespace ProperSkillDistributor
 {
@@ -31,9 +32,24 @@ namespace ProperSkillDistributor
 
         public int SlotIndex => _slotIndex;
 
-        public string Name => string.IsNullOrEmpty(_label) ? "Preset " + _slotIndex : _label;
+        public string Name
+        {
+            get
+            {
+                if (!UsesDefaultName())
+                {
+                    return _label;
+                }
+
+                var presetName = new TextObject("{=preset_name}Preset {SLOT_INDEX}");
+                presetName.SetTextVariable("SLOT_INDEX", _slotIndex);
+                return presetName.ToString();
+            }
+        }
 
         public bool IsConfigured => _hasBuild;
+
+        public bool HasDefaultName => UsesDefaultName();
 
         public Dictionary<string, int> AttributeTargets => _attributePlan;
 
@@ -58,14 +74,14 @@ namespace ProperSkillDistributor
             : this()
         {
             _slotIndex = slotIndex;
-            _label = "Preset " + slotIndex;
+            _label = null;
         }
 
         public void RebuildAfterLoad()
         {
-            if (string.IsNullOrEmpty(_label))
+            if (UsesDefaultName())
             {
-                _label = "Preset " + _slotIndex;
+                _label = null;
             }
 
             _attributePlan = _attributePlan ?? new Dictionary<string, int>();
@@ -75,7 +91,7 @@ namespace ProperSkillDistributor
 
         public void Rename(string name)
         {
-            _label = string.IsNullOrEmpty(name) ? "Preset " + _slotIndex : name;
+            _label = string.IsNullOrEmpty(name) ? null : name;
         }
 
         public void Configure(
@@ -128,7 +144,9 @@ namespace ProperSkillDistributor
             _hasBuild = true;
             _mimicHeroStringId = mimicHeroStringId;
             _mimicHeroName = mimicHeroName;
-            _label = mimicHeroName + "'s skillset";
+            var mimicPresetName = new TextObject("{=mimic_preset_name}{HERO_NAME}'s skillset");
+            mimicPresetName.SetTextVariable("HERO_NAME", mimicHeroName);
+            _label = mimicPresetName.ToString();
 
             _attributePlan.Clear();
             _focusPlan.Clear();
@@ -146,6 +164,12 @@ namespace ProperSkillDistributor
             _attributePlan.Clear();
             _focusPlan.Clear();
             _perkPlan.Clear();
+        }
+
+
+        private bool UsesDefaultName()
+        {
+            return string.IsNullOrEmpty(_label) || _label == "Preset " + _slotIndex;
         }
 
         public int GetAttributeTarget(string attributeId)

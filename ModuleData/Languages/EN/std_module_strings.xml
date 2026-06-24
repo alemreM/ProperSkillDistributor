@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base type="string">
+  <tags>
+    <tag language="English" />
+  </tags>
+  <strings>
+    <string id="mod_name" text="Proper Skill Distributor" />
+    <string id="auto_perks_disabled" text="Disabled by Skill Presets." />
+    <string id="skill_presets_title" text="Skill Presets" />
+    <string id="no_active_campaign_behavior" text="No active campaign behavior was found." />
+    <string id="ok" text="OK" />
+    <string id="add_presets" text="Add Presets" />
+    <string id="add_presets_description" text="Pick a preset slot to edit. Slots can be renamed, cleared, mimiced, or filled from templates." />
+    <string id="use_presets_none" text="Use Presets: None" />
+    <string id="use_presets_name" text="Use Presets: {PRESET_NAME}" />
+    <string id="use_presets_slot" text="Use Presets: Preset {SLOT_INDEX}" />
+    <string id="no_active_hero" text="No active hero." />
+    <string id="none" text="None" />
+    <string id="do_not_use_preset" text="Do not use a preset for this character." />
+    <string id="configured" text="Configured" />
+    <string id="not_configured" text="Not configured" />
+    <string id="selected" text="selected" />
+    <string id="rename" text="Rename" />
+    <string id="clear" text="Clear" />
+    <string id="mimic" text="Mimic" />
+    <string id="templates" text="Templates" />
+    <string id="export" text="Export" />
+    <string id="cancel" text="Cancel" />
+    <string id="save" text="Save" />
+    <string id="select" text="Select" />
+    <string id="copy" text="Copy" />
+    <string id="edit" text="Edit" />
+    <string id="continue" text="Continue" />
+    <string id="spend_leftover_points" text="Spend leftover points :" />
+    <string id="rename_preset" text="Rename Preset" />
+    <string id="enter_preset_name" text="Enter preset name." />
+    <string id="clear_preset" text="Clear Preset" />
+    <string id="clear_preset_question" text="Clear all skillset targets from {PRESET_NAME}?" />
+    <string id="mimic_source_hint" text="Use this characters current skillset as a dynamic preset source." />
+    <string id="no_mimic_hero_found" text="No available clan member found to mimic preset." />
+    <string id="mimic_skillset" text="Mimic Skillset" />
+    <string id="mimic_skillset_description" text="Select a clan member. This preset will dynamically copy that characters skillset." />
+    <string id="no_templates_found" text="No skill preset templates were found." />
+    <string id="copy_template_into" text="Copy this template into {PRESET_NAME}." />
+    <string id="templates_description" text="Select a built-in template to copy into {PRESET_NAME}." />
+    <string id="only_configured_export" text="Only configured presets can be exported." />
+    <string id="export_preset" text="Export Preset" />
+    <string id="name_exported_template" text="Name this exported template" />
+    <string id="export_successful" text="Export successful" />
+    <string id="export_failed" text="Export failed" />
+    <string id="focus_floor_hint" text="Focus floor. Assigned skills are filled to this value before the preset starts targeting other skills with higher values (if their target value is over the floor value). Use - / + to change it." />
+    <string id="attribute_floor_hint" text="Attribute floor. Assigned attributes are filled to this value before the preset starts targeting other skills with higher values (if their target value is over the floor value). Use - / + to change it." />
+    <string id="spend_leftover_hint" text="On: after every preset target is reached, extra points will keep being allocated into the highest target assigned skill or attribute that is not maxed yet.{newline}Off: stop when preset target is reached for every skill and attribute." />
+    <string id="focus_floor_text" text="Focus {VALUE}" />
+    <string id="attribute_floor_text" text="Attr {VALUE}" />
+    <string id="preset_name" text="Preset {SLOT_INDEX}" />
+    <string id="mimic_preset_name" text="{HERO_NAME}&#x27;s skillset" />
+    <string id="mimics" text="Mimics {HERO_NAME}" />
+    <string id="preset_name_empty" text="Preset name cannot be empty." />
+    <string id="clear_hint" text="Clear this preset slot" />
+    <string id="mimic_hint" text="Use a hero as a dynamic skill set source" />
+    <string id="templates_hint" text="Copy a predefined template into this slot" />
+    <string id="export_hint" text="Export this preset to be used later" />
+    <string id="no_shipped_templates" text="No shipped template matches. Validate your game files" />
+    <string id="templates_loaded_with_cuts" text="Templates loaded with cuts. Missing optional ids: {MISSING_COUNT}, skipped rows: {SKIPPED_COUNT}." />
+    <string id="template_file_missing" text="ModuleData/{FILE} is missing." />
+    <string id="cant_read_predefined_templates" text="Cant read predefined preset templates. Check {FILE}. {REASON}" />
+    <string id="cant_read_optional_templates" text="Cant read optional preset templates. Check {FILE}. {REASON}" />
+    <string id="template_file_no_rows" text="{FILE} exists but has no preset rows." />
+    <string id="no_preset_store" text="No preset store" />
+    <string id="no_exportable_slots" text="No exportable preset slots" />
+    <string id="mimic_source_missing" text="Mimic source hero was not found, cant export snapshot." />
+    <string id="exported_to_user_file" text="Exported to ModuleData/{FILE}." />
+    <string id="cant_read_user_file" text="Cant read ModuleData/{FILE}. Fix or delete it first. Launching the game as admin may help. {REASON}" />
+    <string id="exported_from_slot" text="Exported from preset slot {SLOT_INDEX}." />
+    <string id="snapshot_from_mimic_slot" text="Snapshot exported from mimic preset slot {SLOT_INDEX}." />
+    <string id="cant_write_user_file" text="Cant write ModuleData/{FILE}. Maybe the file is read-only or open somewhere. {REASON}" />
+    <string id="template_steward_name" text="Steward" />
+    <string id="template_steward_description" text="Party quartermaster template." />
+    <string id="template_surgeon_name" text="Surgeon" />
+    <string id="template_surgeon_description" text="Party medicine template." />
+    <string id="template_engineer_name" text="Engineer" />
+    <string id="template_engineer_description" text="Party Engineer Template." />
+    <string id="template_scout_name" text="Scout" />
+    <string id="template_scout_description" text="Party scout template." />
+    <string id="template_governor_name" text="Governor" />
+    <string id="template_governor_description" text="Town governor template." />
+    <string id="template_infantry_commander_name" text="Infantry Commander" />
+    <string id="template_infantry_commander_description" text="Infantry commander for field battles." />
+    <string id="template_ranged_commander_name" text="Ranged Commander" />
+    <string id="template_ranged_commander_description" text="Bow and crossbow unit commander for field battles." />
+    <string id="template_cavalry_commander_name" text="Cavalry Commander" />
+    <string id="template_cavalry_commander_description" text="Mounted melee commander for.. field battle?." />
+    <string id="template_horse_archer_commander_name" text="Horse Archer Commander" />
+    <string id="template_horse_archer_commander_description" text="Mounted archer commander template for field battle." />
+    <string id="template_party_leader_name" text="Party Leader" />
+    <string id="template_party_leader_description" text="General party leader template." />
+    <string id="template_caravanner_name" text="Caravanner" />
+    <string id="template_caravanner_description" text="Trade caravan template" />
+    <string id="template_tor_battle_mage_name" text="Battle Mage" />
+    <string id="template_tor_battle_mage_description" text="Battle mage prioritizing offensive spells" />
+    <string id="template_tor_support_mage_name" text="Support Mage" />
+    <string id="template_tor_support_mage_description" text="Support mage prioritizing buff, debuff or healing spells." />
+    <string id="template_tor_faith_name" text="Priest" />
+    <string id="template_tor_faith_description" text="Faith template for warrior priests" />
+    <string id="template_tor_gunpowder_name" text="Master Gunner" />
+    <string id="template_tor_gunpowder_description" text="Gunpowder, engineering and crossbow template for siege efficiency. Gunpowder skill will be prioritized over crossbow" />
+  </strings>
+</base>

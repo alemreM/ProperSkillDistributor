@@ -1,6 +1,7 @@
 using Bannerlord.UIExtenderEx.Attributes;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 
 namespace ProperSkillDistributor
 {
@@ -78,7 +79,7 @@ namespace ProperSkillDistributor
                 {
                     _isSelected = value;
                     OnPropertyChangedWithValue(value, "IsSelected");
-                    SelectionText = value ? "selected" : string.Empty;
+                    SelectionText = value ? new TextObject("{=selected}selected").ToString() : string.Empty;
                 }
             }
         }
@@ -237,12 +238,37 @@ namespace ProperSkillDistributor
             }
         }
 
+
+        [DataSourceProperty]
+        public string ClearText
+        {
+            get { return new TextObject("{=clear}Clear").ToString(); }
+        }
+
+        [DataSourceProperty]
+        public string MimicText
+        {
+            get { return new TextObject("{=mimic}Mimic").ToString(); }
+        }
+
+        [DataSourceProperty]
+        public string TemplatesText
+        {
+            get { return new TextObject("{=templates}Templates").ToString(); }
+        }
+
+        [DataSourceProperty]
+        public string ExportText
+        {
+            get { return new TextObject("{=export}Export").ToString(); }
+        }
+
         public PresetPickerRowVM(PresetPickerVM selector)
         {
             _selector = selector;
             SlotIndex = 0;
-            NameText = "None";
-            StatusText = "Do not use a preset for this character.";
+            NameText = new TextObject("{=none}None").ToString();
+            StatusText = new TextObject("{=do_not_use_preset}Do not use a preset for this character.").ToString();
             CanRename = false;
             CanClear = false;
             CanMimic = false;
@@ -322,35 +348,35 @@ namespace ProperSkillDistributor
         public void ExecuteShowRenameHint()
         {
             IsRenameHovered = true;
-            MBInformationManager.ShowHint("Rename");
+            MBInformationManager.ShowHint(new TextObject("{=rename}Rename").ToString());
         }
 
         [DataSourceMethod]
         public void ExecuteShowClearHint()
         {
             IsClearHovered = true;
-            MBInformationManager.ShowHint("Clear this preset slot");
+            MBInformationManager.ShowHint(new TextObject("{=clear_hint}Clear this preset slot").ToString());
         }
 
         [DataSourceMethod]
         public void ExecuteShowMimicHint()
         {
             IsMimicHovered = true;
-            MBInformationManager.ShowHint("Use a hero as a dynamic skill set source");
+            MBInformationManager.ShowHint(new TextObject("{=mimic_hint}Use a hero as a dynamic skill set source").ToString());
         }
 
         [DataSourceMethod]
         public void ExecuteShowTemplatesHint()
         {
             IsTemplatesHovered = true;
-            MBInformationManager.ShowHint("Copy a predefined template into this slot");
+            MBInformationManager.ShowHint(new TextObject("{=templates_hint}Copy a predefined template into this slot").ToString());
         }
 
         [DataSourceMethod]
         public void ExecuteShowExportHint()
         {
             IsExportHovered = true;
-            MBInformationManager.ShowHint("Export this preset to be used later");
+            MBInformationManager.ShowHint(new TextObject("{=export_hint}Export this preset to be used later").ToString());
         }
 
         [DataSourceMethod]
@@ -381,11 +407,13 @@ namespace ProperSkillDistributor
 
             if (preset.IsMimicPreset)
             {
-                StatusText = "Mimics " + preset.MimicHeroName;
+                var mimicStatusText = new TextObject("{=mimics}Mimics {HERO_NAME}");
+                mimicStatusText.SetTextVariable("HERO_NAME", preset.MimicHeroName);
+                StatusText = mimicStatusText.ToString();
                 return;
             }
 
-            StatusText = preset.IsConfigured ? "Configured" : "Not configured";
+            StatusText = preset.IsConfigured ? new TextObject("{=configured}Configured").ToString() : new TextObject("{=not_configured}Not configured").ToString();
         }
     }
 }

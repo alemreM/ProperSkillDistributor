@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 
 namespace ProperSkillDistributor
 {
@@ -52,6 +53,30 @@ namespace ProperSkillDistributor
         public bool IsEditMode
         {
             get { return true; }
+        }
+
+        [DataSourceProperty]
+        public string CancelText
+        {
+            get { return new TextObject("{=cancel}Cancel").ToString(); }
+        }
+
+        [DataSourceProperty]
+        public string EditText
+        {
+            get { return new TextObject("{=edit}Edit").ToString(); }
+        }
+
+        [DataSourceProperty]
+        public string ContinueText
+        {
+            get { return new TextObject("{=continue}Continue").ToString(); }
+        }
+
+        [DataSourceProperty]
+        public string SpendLeftoverPointsText
+        {
+            get { return new TextObject("{=spend_leftover_points}Spend leftover points :").ToString(); }
         }
 
         [DataSourceProperty]
@@ -226,12 +251,12 @@ namespace ProperSkillDistributor
 
             InformationManager.ShowTextInquiry(
                 new TextInquiryData(
-                    "Rename Preset",
-                    "Enter preset name.",
+                    new TextObject("{=rename_preset}Rename Preset").ToString(),
+                    new TextObject("{=enter_preset_name}Enter preset name.").ToString(),
                     true,
                     true,
-                    "Save",
-                    "Cancel",
+                    new TextObject("{=save}Save").ToString(),
+                    new TextObject("{=cancel}Cancel").ToString(),
                     name => RenameSlot(row, name),
                     null,
                     false,
@@ -249,14 +274,17 @@ namespace ProperSkillDistributor
                 return;
             }
 
+            var clearPresetQuestion = new TextObject("{=clear_preset_question}Clear all skillset targets from {PRESET_NAME}?");
+            clearPresetQuestion.SetTextVariable("PRESET_NAME", row.NameText);
+
             InformationManager.ShowInquiry(
                 new InquiryData(
-                    "Clear Preset",
-                    "Clear all skillset targets from " + row.NameText + "?",
+                    new TextObject("{=clear_preset}Clear Preset").ToString(),
+                    clearPresetQuestion.ToString(),
                     true,
                     true,
-                    "Clear",
-                    "Cancel",
+                    new TextObject("{=clear}Clear").ToString(),
+                    new TextObject("{=cancel}Cancel").ToString(),
                     () => ClearSlot(row),
                     null),
                 false,
@@ -279,25 +307,25 @@ namespace ProperSkillDistributor
                     hero.Name.ToString(),
                     null,
                     true,
-                    "Use this characters current skillset as a dynamic preset source."));
+                    new TextObject("{=mimic_source_hint}Use this characters current skillset as a dynamic preset source.").ToString()));
             }
 
             if (heroes.Count == 0)
             {
-                InformationManager.DisplayMessage(new InformationMessage("No available clan member found to mimic preset."));
+                InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=no_mimic_hero_found}No available clan member found to mimic preset.").ToString()));
                 return;
             }
 
             MBInformationManager.ShowMultiSelectionInquiry(
                 new MultiSelectionInquiryData(
-                    "Mimic Skillset",
-                    "Select a clan member. This preset will dynamically copy that characters skillset.",
+                    new TextObject("{=mimic_skillset}Mimic Skillset").ToString(),
+                    new TextObject("{=mimic_skillset_description}Select a clan member. This preset will dynamically copy that characters skillset.").ToString(),
                     heroes,
                     true,
                     1,
                     1,
-                    "Select",
-                    "Cancel",
+                    new TextObject("{=select}Select").ToString(),
+                    new TextObject("{=cancel}Cancel").ToString(),
                     pickedHeroes => UseMimicSource(row, pickedHeroes),
                     null));
         }
@@ -314,7 +342,7 @@ namespace ProperSkillDistributor
             if (templates.Count == 0)
             {
                 string message = string.IsNullOrEmpty(PredefinedTemplateCatalog.LoadError)
-                    ? "No skill preset templates were found."
+                    ? new TextObject("{=no_templates_found}No skill preset templates were found.").ToString()
                     : PredefinedTemplateCatalog.LoadError;
 
                 InformationManager.DisplayMessage(new InformationMessage(message));
@@ -325,9 +353,18 @@ namespace ProperSkillDistributor
 
             foreach (TemplatePreset template in templates)
             {
-                string hint = string.IsNullOrEmpty(template.Description)
-                    ? "Copy this template into " + row.NameText + "."
-                    : template.Description;
+                string hint;
+
+                if (string.IsNullOrEmpty(template.Description))
+                {
+                    var copyTemplateHint = new TextObject("{=copy_template_into}Copy this template into {PRESET_NAME}.");
+                    copyTemplateHint.SetTextVariable("PRESET_NAME", row.NameText);
+                    hint = copyTemplateHint.ToString();
+                }
+                else
+                {
+                    hint = template.Description;
+                }
 
                 elements.Add(new InquiryElement(
                     template,
@@ -337,16 +374,19 @@ namespace ProperSkillDistributor
                     hint));
             }
 
+            var templatesDescription = new TextObject("{=templates_description}Select a built-in template to copy into {PRESET_NAME}.");
+            templatesDescription.SetTextVariable("PRESET_NAME", row.NameText);
+
             MBInformationManager.ShowMultiSelectionInquiry(
                 new MultiSelectionInquiryData(
-                    "Templates",
-                    "Select a built-in template to copy into " + row.NameText + ".",
+                    new TextObject("{=templates}Templates").ToString(),
+                    templatesDescription.ToString(),
                     elements,
                     true,
                     1,
                     1,
-                    "Copy",
-                    "Cancel",
+                    new TextObject("{=copy}Copy").ToString(),
+                    new TextObject("{=cancel}Cancel").ToString(),
                     pickedTemplates => UseTemplate(row, pickedTemplates),
                     null));
         }
@@ -363,18 +403,18 @@ namespace ProperSkillDistributor
 
             if (preset == null || !preset.IsConfigured)
             {
-                ShowExportResult(false, "Only configured presets can be exported.");
+                ShowExportResult(false, new TextObject("{=only_configured_export}Only configured presets can be exported.").ToString());
                 return;
             }
 
             InformationManager.ShowTextInquiry(
                 new TextInquiryData(
-                    "Export Preset",
-                    "Name this exported template",
+                    new TextObject("{=export_preset}Export Preset").ToString(),
+                    new TextObject("{=name_exported_template}Name this exported template").ToString(),
                     true,
                     true,
-                    "Export",
-                    "Cancel",
+                    new TextObject("{=export}Export").ToString(),
+                    new TextObject("{=cancel}Cancel").ToString(),
                     exportName => ExportSlotWithName(row, exportName),
                     null,
                     false,
@@ -397,11 +437,11 @@ namespace ProperSkillDistributor
         {
             InformationManager.ShowInquiry(
                 new InquiryData(
-                    success ? "Export successful" : "Export failed",
+                    success ? new TextObject("{=export_successful}Export successful").ToString() : new TextObject("{=export_failed}Export failed").ToString(),
                     message,
                     true,
                     false,
-                    "OK",
+                    new TextObject("{=ok}OK").ToString(),
                     string.Empty,
                     null,
                     null),
@@ -411,23 +451,27 @@ namespace ProperSkillDistributor
 
         private string GetFocusFloorHint()
         {
-			return "Focus floor. Assigned skills are filled to this value before the preset starts targeting other skills with higher values (if their target value is over the floor value). Use - / + to change it.";
+			return new TextObject("{=focus_floor_hint}Focus floor. Assigned skills are filled to this value before the preset starts targeting other skills with higher values (if their target value is over the floor value). Use - / + to change it.").ToString();
 		}
 
         private string GetAttributeFloorHint()
         {
-            return "Attribute floor. Assigned attributes are filled to this value before the preset starts targeting other skills with higher values (if their target value is over the floor value). Use - / + to change it.";
+            return new TextObject("{=attribute_floor_hint}Attribute floor. Assigned attributes are filled to this value before the preset starts targeting other skills with higher values (if their target value is over the floor value). Use - / + to change it.").ToString();
         }
         private string GetSpendLeftoverPointsHint()
         {
-            return "On: after every preset target is reached, extra points will keep being allocated into the highest target assigned skill or attribute that is not maxed yet.\n"
-                + "Off: stop when preset target is reached for every skill and attribute.";
+            return new TextObject("{=spend_leftover_hint}On: after every preset target is reached, extra points will keep being allocated into the highest target assigned skill or attribute that is not maxed yet.\nOff: stop when preset target is reached for every skill and attribute.").ToString();
         }
 
         private void RefreshFloorText()
         {
-            FocusFloorText = "Focus " + _presets.FocusFloorLimit;
-            AttributeFloorText = "Attr " + _presets.AttributeFloorLimit;
+            var focusFloorText = new TextObject("{=focus_floor_text}Focus {VALUE}");
+            focusFloorText.SetTextVariable("VALUE", _presets.FocusFloorLimit);
+            FocusFloorText = focusFloorText.ToString();
+
+            var attributeFloorText = new TextObject("{=attribute_floor_text}Attr {VALUE}");
+            attributeFloorText.SetTextVariable("VALUE", _presets.AttributeFloorLimit);
+            AttributeFloorText = attributeFloorText.ToString();
         }
         private void RefreshSpendLeftoverPoints()
         {
@@ -436,8 +480,8 @@ namespace ProperSkillDistributor
 
         private void FillPresetSlots()
         {
-            TitleText = "Add Presets";
-            DescriptionText = "Pick a preset slot to edit. Slots can be renamed, cleared, mimiced, or filled from templates.";
+            TitleText = new TextObject("{=add_presets}Add Presets").ToString();
+            DescriptionText = new TextObject("{=add_presets_description}Pick a preset slot to edit. Slots can be renamed, cleared, mimiced, or filled from templates.").ToString();
 
             List<SkillPreset> presets = _presets.GetPresets();
             PresetPickerRowVM firstPresetRow = null;
@@ -671,7 +715,7 @@ namespace ProperSkillDistributor
             public PresetSlotSnapshot(SkillPreset preset)
             {
                 SlotIndex = preset.SlotIndex;
-                Name = preset.Name;
+                Name = preset.HasDefaultName ? string.Empty : preset.Name;
                 IsConfigured = preset.IsConfigured;
                 IsMimicPreset = preset.IsMimicPreset;
                 MimicHeroStringId = preset.MimicHeroStringId;
@@ -686,7 +730,7 @@ namespace ProperSkillDistributor
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                return new Tuple<bool, string>(false, "Preset name cannot be empty.");
+                return new Tuple<bool, string>(false, new TextObject("{=preset_name_empty}Preset name cannot be empty.").ToString());
             }
 
             return new Tuple<bool, string>(true, string.Empty);

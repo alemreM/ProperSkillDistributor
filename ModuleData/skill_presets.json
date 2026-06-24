@@ -2,8 +2,8 @@
   "presets": [
     {
       "id": "steward",
-      "name": "Steward",
-      "description": "Party quartermaster template.",
+      "name": "{=template_steward_name}Steward",
+      "description": "{=template_steward_description}Party quartermaster template.",
       "attributes": {
         "intelligence": 10,
         "social": 9
@@ -41,8 +41,8 @@
     },
     {
       "id": "surgeon",
-      "name": "Surgeon",
-      "description": "Party medicine template.",
+      "name": "{=template_surgeon_name}Surgeon",
+      "description": "{=template_surgeon_description}Party medicine template.",
       "attributes": {
         "intelligence": 10
       },
@@ -65,8 +65,8 @@
     },
     {
       "id": "engineer",
-      "name": "Engineer",
-      "description": "Party Engineer Template.",
+      "name": "{=template_engineer_name}Engineer",
+      "description": "{=template_engineer_description}Party Engineer Template.",
       "attributes": {
         "intelligence": 10
       },
@@ -89,8 +89,8 @@
     },
     {
       "id": "scout",
-      "name": "Scout",
-      "description": "Party scout template.",
+      "name": "{=template_scout_name}Scout",
+      "description": "{=template_scout_description}Party scout template.",
       "attributes": {
         "cunning": 10
       },
@@ -113,8 +113,8 @@
     },
     {
       "id": "governor",
-      "name": "Governor",
-      "description": "Town governor template.",
+      "name": "{=template_governor_name}Governor",
+      "description": "{=template_governor_description}Town governor template.",
       "attributes": {
         "intelligence": 10,
         "social": 9
@@ -323,8 +323,8 @@
     },
     {
       "id": "infantry_commander",
-      "name": "Infantry Commander",
-      "description": "Infantry commander for field battles.",
+      "name": "{=template_infantry_commander_name}Infantry Commander",
+      "description": "{=template_infantry_commander_description}Infantry commander for field battles.",
       "attributes": {
         "control": 5,
         "cunning": 4,
@@ -426,8 +426,8 @@
     },
     {
       "id": "ranged_commander",
-      "name": "Ranged Commander",
-      "description": "Bow and crossbow unit commander for field battles.",
+      "name": "{=template_ranged_commander_name}Ranged Commander",
+      "description": "{=template_ranged_commander_description}Bow and crossbow unit commander for field battles.",
       "attributes": {
         "control": 9,
         "cunning": 3,
@@ -548,8 +548,8 @@
     },
     {
       "id": "cavalry_commander",
-      "name": "Cavalry Commander",
-      "description": "Mounted melee commander for.. field battle?.",
+      "name": "{=template_cavalry_commander_name}Cavalry Commander",
+      "description": "{=template_cavalry_commander_description}Mounted melee commander for.. field battle?.",
       "attributes": {
         "control": 5,
         "cunning": 4,
@@ -641,8 +641,8 @@
     },
     {
       "id": "horse_archer_commander",
-      "name": "Horse Archer Commander",
-      "description": "Mounted archer commander template for field battle.",
+      "name": "{=template_horse_archer_commander_name}Horse Archer Commander",
+      "description": "{=template_horse_archer_commander_description}Mounted archer commander template for field battle.",
       "attributes": {
         "control": 6,
         "cunning": 4,
@@ -747,8 +747,8 @@
     },
     {
       "id": "party_leader",
-      "name": "Party Leader",
-      "description": "General party leader template.",
+      "name": "{=template_party_leader_name}Party Leader",
+      "description": "{=template_party_leader_description}General party leader template.",
       "attributes": {
         "cunning": 6,
         "social": 5,
@@ -890,8 +890,8 @@
     },
     {
       "id": "caravanner",
-      "name": "Caravanner",
-      "description": "Trade caravan template",
+      "name": "{=template_caravanner_name}Caravanner",
+      "description": "{=template_caravanner_description}Trade caravan template",
       "attributes": {
         "cunning": 4,
         "social": 6,
