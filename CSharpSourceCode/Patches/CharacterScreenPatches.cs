@@ -164,7 +164,7 @@ namespace ProperSkillDistributor
             return AccessTools.Method(screenType, "OnFrameTick", new[] { typeof(float) });
         }
 
-        private static void Postfix(GauntletLayer ____gauntletLayer)
+        private static void Postfix(GauntletLayer ____gauntletLayer, CharacterDeveloperVM ____dataSource)
         {
             if (!_restoreFocusOnNextCharacterDeveloperTick)
             {
@@ -177,6 +177,8 @@ namespace ProperSkillDistributor
             }
 
             _restoreFocusOnNextCharacterDeveloperTick = false;
+
+            CharacterScreenPresetMixin.RefreshFor(____dataSource);
 
             ____gauntletLayer.IsFocusLayer = true;
 
